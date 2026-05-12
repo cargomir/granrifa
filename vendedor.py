@@ -236,7 +236,8 @@ def render_vendedor():
         st.session_state.id_compra_activa = None
     if "nombre_vendedor_activo" not in st.session_state:
         st.session_state.nombre_vendedor_activo = None
-
+    if "compras_cerradas_sesion" not in st.session_state:
+        st.session_state.compras_cerradas_sesion = []
     # -----------------------------
     # Paso 1: Identificación vendedor
     # -----------------------------
@@ -259,7 +260,6 @@ def render_vendedor():
         return
 
     st.info(f"Vendedor activo: **{st.session_state.nombre_vendedor_activo}**")
-    st.caption(f"ID compra activa: {st.session_state.id_compra_activa}")
 
     mostrar_grilla_numeros()
 
@@ -324,7 +324,7 @@ def render_vendedor():
     # -----------------------------
     col_izq, col_centro, col_der = st.columns([1, 1, 1])
 
-    def reservar(finalizar: bool):
+    def reservar():
         if not nombre_actual.strip():
             st.error("Debes ingresar el nombre del comprador.")
             return
@@ -347,10 +347,11 @@ def render_vendedor():
             st.error("Debes seleccionar al menos un número.")
             return
 
-        if not st.session_state.id_compra_activa:
-            st.session_state.id_compra_activa = db.crear_compra(
-                st.session_state.nombre_vendedor_activo
-            )
+        id_compra_actual = db.crear_compra(
+            st.session_state.nombre_vendedor_activo
+        )
+
+        st.session_state.id_compra_activa = id_compra_actual
 
         errores = []
         exitos = []
@@ -358,7 +359,7 @@ def render_vendedor():
         for num in numeros_seleccionados:
             ok, msg = db.reservar_numero_atomico(
                 numero=int(num),
-                id_compra=st.session_state.id_compra_activa,
+                id_compra=id_compra_actual,
                 id_comprador=id_comprador,
                 precio_unitario=p_actual
             )
@@ -381,7 +382,15 @@ def render_vendedor():
         if errores and not exitos:
             return
 
+        id_compra_cerrada = id_compra_actual
+
+        if id_compra_cerrada not in st.session_state.compras_cerradas_sesion:
+            st.session_state.compras_cerradas_sesion = (
+                st.session_state.compras_cerradas_sesion + [id_compra_cerrada]
+            )
+
         _limpiar_formulario_numero()
+        st.session_state.id_compra_activa = None
 
         st.rerun()
 
@@ -394,39 +403,25 @@ def render_vendedor():
 
     with col_centro:
         if st.button(
-            "Agregar números a la compra",
+            "Reservar y cerrar compra",
             type="primary",
             disabled=formulario_incompleto,
             width=250
         ):
-            reservar(finalizar=False)
+            reservar()
 
-    if st.session_state.id_compra_activa:
+    if st.session_state.compras_cerradas_sesion:
         st.divider()
-        st.subheader("Números reservados en esta compra")
-        _mostrar_reservados(st.session_state.id_compra_activa)
+        st.subheader("Compras reservadas en esta sesión")
 
-        st.warning(
-            f"El pago debe realizarse en un plazo máximo de {t_actual} minutos "
-            "desde la primera reserva. Si no se confirma el pago, los números "
-            "volverán a estar disponibles automáticamente."
-        )
+        for i, id_compra in enumerate(st.session_state.compras_cerradas_sesion, start=1):
+            st.markdown(f"### Compra {i}")
 
-        mostrar_contador_expiracion(st.session_state.id_compra_activa)
+            st.warning(
+                f"El pago debe realizarse en un plazo máximo de {t_actual} minutos "
+                "desde la primera reserva. Si no se confirma el pago, los números "
+                "volverán a estar disponibles automáticamente."
+            )
 
-        col_izq, col_centro, col_der = st.columns([1, 1, 1])
-
-        with col_centro:
-            if st.button("Nueva venta", type="primary", width=250):
-            
-                for k in [
-                    "id_compra_activa",
-                    "numeros_seleccionados",
-                    "nombre_comprador_input",
-                    "telefono_input",
-                    "correo_input",
-                    "comprador_buscado",
-                ]:
-                    st.session_state.pop(k, None)
-
-                st.rerun()
+            mostrar_contador_expiracion(id_compra)
+            _mostrar_reservados(id_compra)
