@@ -435,7 +435,7 @@ def render_vendedor():
 
             st.warning(
                 f"El pago debe realizarse en un plazo máximo de {tiempo_texto} "
-                "desde la primera reserva. Si no se confirma el pago, los números "
+                "desde la reserva. Si no se confirma el pago, los números "
                 "volverán a estar disponibles automáticamente."
             )
 
