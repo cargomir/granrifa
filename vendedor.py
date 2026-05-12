@@ -425,8 +425,16 @@ def render_vendedor():
         for i, id_compra in enumerate(st.session_state.compras_cerradas_sesion, start=1):
             st.markdown(f"### Compra {i}")
 
+            horas = t_actual // 60
+            minutos = t_actual % 60
+
+            if minutos == 0:
+                tiempo_texto = f"{horas} hora(s)"
+            else:
+                tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
+
             st.warning(
-                f"El pago debe realizarse en un plazo máximo de {t_actual} minutos "
+                f"El pago debe realizarse en un plazo máximo de {tiempo_texto} "
                 "desde la primera reserva. Si no se confirma el pago, los números "
                 "volverán a estar disponibles automáticamente."
             )
