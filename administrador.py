@@ -311,11 +311,13 @@ def render_administracion():
             clave_admin=clave_admin
         )
 
-        if n_final > n_actual:
-            insertados = db.asegurar_numeros_hasta_n(n_final)
+        
+        insertados = db.asegurar_numeros_hasta_n(n_final)
+
+        if insertados > 0:
             st.success(f"Configuración guardada. Se agregaron {insertados} números nuevos.")
         else:
-            st.success("Configuración guardada.")
+            st.success("Configuración guardada. No fue necesario agregar números nuevos.")
 
         st.rerun()
 
