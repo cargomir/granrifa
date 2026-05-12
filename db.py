@@ -233,6 +233,22 @@ def exportar_todos_los_numeros() -> List[Dict[str, Any]]:
         })
 
     return salida
+
+def reiniciar_numeros_rifa(n):
+    supabase.table("numeros").delete().neq("id_numero", 0).execute()
+
+    nuevos = [
+        {
+            "numero": i,
+            "estado": "disponible",
+            "id_compra": None
+        }
+        for i in range(1, int(n) + 1)
+    ]
+
+    if nuevos:
+        supabase.table("numeros").insert(nuevos).execute()
+        
 # ============================================================
 # Expiración de reservas
 # ============================================================

@@ -294,14 +294,7 @@ def render_administracion():
     if guardar:
         n_actual = int(config["n"])
 
-        if int(n) < n_actual:
-            st.warning(
-                f"El nuevo valor de n ({int(n)}) es menor que el actual ({n_actual}). "
-                "No se eliminarán números existentes."
-            )
-            n_final = n_actual
-        else:
-            n_final = int(n)
+        n_final = int(n)
 
         db.guardar_configuracion(
             n=n_final,
@@ -312,7 +305,11 @@ def render_administracion():
         )
 
         
-        insertados = db.asegurar_numeros_hasta_n(n_final)
+        if n_final < n_actual:
+            db.reiniciar_numeros_rifa(n_final)
+            insertados = n_final
+        else:
+            insertados = db.asegurar_numeros_hasta_n(n_final)
 
         if insertados > 0:
             st.success(f"Configuración guardada. Se agregaron {insertados} números nuevos.")
