@@ -59,8 +59,9 @@ def login():
 
             <p style='
                 text-align: center;
+                font-weight: bold;
                 color: #D32F2F;
-                font-size: 14px;
+                font-size: 18px;
                 margin-top: 0px;
             '>
             Selecciona tu perfil y luego ingresa tu contraseña
