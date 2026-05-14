@@ -56,16 +56,6 @@ def login():
             '>
             Bienvenido a la gran rifa del 8° A del Colegio Gabriela Mistral
             </p>
-
-            <p style='
-                text-align: center;
-                font-weight: bold;
-                color: #D32F2F;
-                font-size: 18px;
-                margin-top: 0px;
-            '>
-            Selecciona tu perfil y luego ingresa tu contraseña
-            </p>
             """,
             unsafe_allow_html=True
         )
@@ -95,6 +85,21 @@ def login():
                 unsafe_allow_html=True
             )
 
+        st.markdown(
+            """
+            <p style='
+                text-align: center;
+                font-weight: bold;
+                color: #D32F2F;
+                font-size: 18px;
+                margin-top: 0px;
+            '>
+            Selecciona tu perfil y luego ingresa tu contraseña
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
+        
         st.markdown("""
             <style>
 
