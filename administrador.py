@@ -416,10 +416,11 @@ def render_administracion():
             p=int(p),
             t=int(t),
             clave_vendedor=clave_vendedor,
-            clave_admin=clave_admin
+            clave_admin=clave_admin,
+            premios=premios,
+            fecha_rifa=str(fecha_rifa) if fecha_rifa else None
         )
 
-        
         if n_final < n_actual:
             db.reiniciar_numeros_rifa(n_final)
             insertados = n_final
