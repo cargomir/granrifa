@@ -263,12 +263,12 @@ def render_vendedor():
         _mostrar_reservados(st.session_state.id_compra_activa)
         return
 
-    numeros_seleccionados = st.multiselect(
+    numeros_seleccionados = st.pills(
         "Números disponibles",
         disponibles,
+        selection_mode="multi",
         key="numeros_seleccionados",
-        format_func=lambda x: f"Número {x}",
-        placeholder="Seleccione uno o más números"
+        format_func=lambda x: f"Número {x}"
     )
 
     if numeros_seleccionados:
@@ -426,19 +426,20 @@ def render_vendedor():
             compra_pagada = all(n["estado"] == "pagado" for n in numeros_compra)
 
             if not compra_pagada:
-                st.warning(
-                    f"El pago debe transferirse a la cuenta del curso en un plazo máximo de "
-                    f"{tiempo_texto} desde la reserva. Si no se confirma el pago, "
-                    "los números volverán a estar disponibles automáticamente.\n\n"
+                st.markdown(
+                    f"""
+                > ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de {tiempo_texto} desde la reserva.  
+                > Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
 
-                    "La cuenta para realizar la transferencia es:\n"
+                ### Datos de transferencia
 
-                    "Nombre: Susan Velozo Catalan\n"
-                    "Correo electrónico: susanvelozo@hotmail.com\n"
-                    "Tipo de cuenta: Vista\n"
-                    "RUT: 16.956.509-0\n"
-                    "Banco: Mercado Pago\n"
-                    "Nº de cuenta: 1097008263"
+                - **Nombre:** Susan Velozo Catalan  
+                - **Correo electrónico:** susanvelozo@hotmail.com  
+                - **Tipo de cuenta:** Vista  
+                - **RUT:** 16.956.509-0  
+                - **Banco:** Mercado Pago  
+                - **Nº de cuenta:** 1097008263
+                """
                 )
 
                 mostrar_contador_expiracion(id_compra)
