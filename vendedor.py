@@ -3,6 +3,7 @@ import streamlit.components.v1 as components
 import pandas as pd
 import db
 from streamlit_autorefresh import st_autorefresh
+from streamlit_searchbox import st_searchbox
 
 def mostrar_contador_expiracion(id_compra: str):
     tiempo = db.tiempo_restante_compra(id_compra)
@@ -224,10 +225,11 @@ def render_vendedor():
     st.session_state.setdefault("correo_input", "")
     st.session_state.setdefault("comprador_buscado", "")
 
-    nombre_actual = st.text_input(
-        "Nombre comprador",
-        key="nombre_comprador_input",
-        placeholder="Ej: Patricio Achurra"
+    nombre_actual = st_searchbox(
+        db.buscar_compradores,
+        placeholder="Ej: Patricio Achurra",
+        label="Nombre comprador",
+        key="nombre_comprador_search"        
     )
 
     # Autocompletado simple:
@@ -250,11 +252,17 @@ def render_vendedor():
             disabled=True
         )
 
+    telefono_guardado = st.session_state.get("telefono_input", "")
+
+    if telefono_guardado.startswith("+56"):
+        telefono_guardado = telefono_guardado[3:]
+
     with col_numero:
         telefono_numero = st.text_input(
             "Teléfono",
-            key="telefono_input",
-            placeholder="Ej: 987654321"
+            value=telefono_guardado,
+            key="telefono_input_visible",
+            placeholder="Ejemplo: 223456789"
         )
 
     telefono = f"+56{telefono_numero.strip()}"

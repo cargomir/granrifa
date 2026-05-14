@@ -254,7 +254,21 @@ def reiniciar_numeros_rifa(n):
 
     if nuevos:
         supabase.table("numeros").insert(nuevos).execute()
-        
+
+def buscar_compradores(searchterm: str) -> List[str]:
+
+    resp = (
+        supabase.table("compradores")
+        .select("nombre_comprador")
+        .ilike("nombre_comprador", f"%{searchterm.upper()}%")
+        .limit(10)
+        .execute()
+    )
+
+    return [
+        r["nombre_comprador"]
+        for r in _data(resp)
+    ]  
 # ============================================================
 # Expiración de reservas
 # ============================================================
