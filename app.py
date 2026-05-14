@@ -204,12 +204,22 @@ def login():
             else:
                 st.error("Contraseña incorrecta.")
 
+def barra_superior():
+
+    col_vacia, col_boton = st.columns([8, 1])
+
+    with col_boton:
+        if st.button("Cerrar sesión", type="primary", width="stretch"):
+            cerrar_sesion()
+
 def main():
     inicializar_estado()
 
     if not st.session_state.autenticado:
         login()
         return
+
+    barra_superior()
 
     if st.session_state.perfil == "vendedor":
         render_vendedor()
