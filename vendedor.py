@@ -318,9 +318,8 @@ def render_vendedor():
             f"""
     ⚠️ Solo desmarca esta opción si deseas pagar mediante transferencia a la cuenta del curso.
 
-    En ese caso, deberás enviar el comprobante de pago a la tesorera de la directiva de apoderados dentro de un plazo máximo de **{tiempo_texto}**.
-
-    Después de ese tiempo, los números seleccionados volverán a estar disponibles automáticamente.
+    En ese caso, deberás enviar el comprobante de pago a la directiva de los apoderados del curso dentro de un plazo máximo de **{tiempo_texto}**.
+    Después de ese tiempo, si el pago aún no ha sido confirmado dentro de la aplicación por la directiva, los números seleccionados volverán a estar disponibles automáticamente.
     """
         )
 
