@@ -32,7 +32,6 @@ def _limpiar_formulario_numero():
         "numeros_seleccionados",
         "nombre_comprador_input",
         "telefono_input",
-        "telefono_input_visible",
         "correo_input",
         "comprador_buscado",
     ]:
@@ -247,7 +246,9 @@ def render_vendedor():
                 telefono_visible = telefono_completo
 
             st.session_state["telefono_input"] = telefono_completo
-            st.session_state["telefono_input_visible"] = telefono_visible
+            st.session_state[
+                f"telefono_input_visible_{st.session_state.get('telefono_key_version', 0)}"
+            ] = telefono_visible
             st.session_state["correo_input"] = comprador.get("correo") or ""
 
             st.toast("Datos del comprador encontrados y autocompletados.")
