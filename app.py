@@ -73,7 +73,7 @@ def login():
                     border:2px solid #1565C0;
                     border-radius:14px;
                     padding:16px;
-                    margin:16px 0 20px 0;
+                    margin:16px 0 16px 0;
                     color:#0D47A1;
                     font-size:17px;
                     text-align:center;
