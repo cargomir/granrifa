@@ -281,7 +281,7 @@ def render_vendedor():
     )
 
     pagado_alumno = st.checkbox(
-        f"El valor de los números será pagado al estudiante {st.session_state.nombre_vendedor_activo}",
+        f"El valor de los números será pagado al estudiante **{st.session_state.nombre_vendedor_activo}**",
         value=True
     )
 
