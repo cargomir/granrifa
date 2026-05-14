@@ -174,6 +174,28 @@ def render_vendedor():
         _mostrar_reservados(st.session_state.id_compra_activa)
         return
 
+    st.markdown("""
+    <style>
+
+    /* Pills normales */
+    button[kind="pills"] {
+        background-color: #E3F2FD !important;
+        color: #1565C0 !important;
+        border: 1px solid #1565C0 !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Pills seleccionadas */
+    button[kind="pills"][aria-pressed="true"] {
+        background-color: #1565C0 !important;
+        color: white !important;
+        border: 1px solid #1565C0 !important;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
     numeros_seleccionados = st.pills(
         "Números disponibles",
         disponibles,
