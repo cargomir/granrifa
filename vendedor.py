@@ -38,6 +38,9 @@ def _limpiar_formulario_numero():
     ]:
         st.session_state.pop(k, None)
 
+    st.session_state["telefono_key_version"] = (
+            st.session_state.get("telefono_key_version", 0) + 1
+    )
 
 def _mostrar_reservados(id_compra: str):
     if not id_compra:
@@ -259,10 +262,12 @@ def render_vendedor():
             disabled=True
         )
 
+    st.session_state.setdefault("telefono_key_version", 0)
+
     with col_numero:
         telefono_numero = st.text_input(
             "Teléfono",
-            key="telefono_input_visible",
+            key=f"telefono_input_visible_{st.session_state.telefono_key_version}",
             placeholder="Ej: 987654321"
         )
 
@@ -416,7 +421,7 @@ def render_vendedor():
 
     ### Datos de transferencia
 
-    - **Nombre:** Susan Velozo Catalan  
+    - **Nombre:** Susan Velozo Catalán  
     - **Correo electrónico:** susanvelozo@hotmail.com  
     - **Tipo de cuenta:** Vista  
     - **RUT:** 16.956.509-0  
