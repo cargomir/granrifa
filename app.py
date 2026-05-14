@@ -141,8 +141,9 @@ def login():
 
             nombre_alumno = st.selectbox(
                 "Nombre alumno/a",
-                options=[None] + alumnos,
-                format_func=lambda x: "Selecciona el nombre del estudiante al que le comprarás los números" if x is None else x
+                alumnos,
+                index=None,
+                placeholder="Selecciona el nombre del estudiante al que le comprarás los números"
             )
 
         clave = st.text_input(
