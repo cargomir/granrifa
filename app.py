@@ -72,6 +72,29 @@ def login():
 
         config = db.obtener_configuracion()
 
+        premios = config.get("premios")
+        fecha_rifa = config.get("fecha_rifa")
+
+        if premios or fecha_rifa:
+            st.markdown(
+                f"""
+                <div style="
+                    background-color:#E3F2FD;
+                    border:2px solid #1565C0;
+                    border-radius:14px;
+                    padding:16px;
+                    margin:16px 0 20px 0;
+                    color:#0D47A1;
+                    font-size:17px;
+                    text-align:center;
+                ">
+                    {f"<p><strong>Premios principales:</strong><br>{premios}</p>" if premios else ""}
+                    {f"<p><strong>Fecha de lanzamiento:</strong><br>{fecha_rifa}</p>" if fecha_rifa else ""}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
         st.markdown("""
             <style>
 
