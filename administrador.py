@@ -4,6 +4,7 @@ import pandas as pd
 import random
 from io import BytesIO
 from streamlit_autorefresh import st_autorefresh
+from app import cerrar_sesion
 
 import db
 
@@ -177,7 +178,7 @@ def render_administrador():
 
     st_autorefresh(interval=30000, key="refresh_admin")
     
-    col_logo, col_titulo = st.columns([1, 8])
+    col_logo, col_titulo, col_boton = st.columns([1, 6, 2])
 
     with col_logo:
         st.image("logo.png", width=120)
@@ -187,6 +188,20 @@ def render_administrador():
             "<h1 style='margin-top:10px;'>Perfil administrador</h1>",
             unsafe_allow_html=True
         )
+
+    with col_boton:
+
+        st.markdown(
+            "<div style='height:18px;'></div>",
+            unsafe_allow_html=True
+        )
+
+        if st.button(
+            "Cerrar sesión",
+            type="primary",
+            use_container_width=True
+        ):
+            cerrar_sesion()
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Gestión de compras",
