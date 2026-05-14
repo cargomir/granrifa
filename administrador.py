@@ -276,6 +276,11 @@ def render_gestion_compras():
                 "total": "Total",
                 "numeros": "Números"
             })
+
+            df["Total"] = df["Total"].apply(
+                lambda x: f"${float(x):,.0f}".replace(",", ".")
+            )
+
             mostrar_tabla_estilizada(
                 df[
                     [
@@ -376,6 +381,23 @@ def render_administracion():
             step=1,
             value=max(1, int(config["t"]) // 60)
         )
+
+        premios = st.text_area(
+            "Premios principales",
+            value=config.get("premios", ""),
+            placeholder="Ej: 1° premio: Gift card..."
+        )
+
+        usar_fecha = st.checkbox("Definir fecha de lanzamiento")
+
+        fecha_rifa = None
+
+        if usar_fecha:
+            fecha_rifa = st.date_input(
+                "Fecha de lanzamiento de la rifa",
+                value=pd.to_datetime(config.get("fecha_rifa")).date()
+                if config.get("fecha_rifa") else None
+            )
 
         t = t_horas * 60
 
