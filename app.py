@@ -140,7 +140,6 @@ def login():
                 return
 
             nombre_alumno = st.selectbox(
-                "Selecciona el nombre del estudiante que venderá los números",
                 options=[None] + alumnos,
                 format_func=lambda x: "Selecciona el nombre del estudiante al que le comprarás los números" if x is None else x
             )
