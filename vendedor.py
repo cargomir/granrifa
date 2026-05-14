@@ -348,8 +348,13 @@ def render_vendedor():
         st.divider()
         st.subheader("Ventas realizadas por este alumno")
 
+        total_ventas = len(ventas_alumno)
+
         for i, compra in enumerate(ventas_alumno, start=1):
-            st.markdown(f"### Venta {i}")
+
+            numero_venta = total_ventas - i + 1
+
+            st.markdown(f"### Venta {numero_venta}")
 
             st.write(f"**Fecha:** {compra['fecha_hora_compra']}")
             st.write(f"**Comprador:** {compra['comprador']}")
