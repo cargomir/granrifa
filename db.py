@@ -87,7 +87,7 @@ def validar_telefono(telefono: str) -> tuple[bool, str]:
     if tel == "":
         return True, ""
 
-    if not re.fullmatch(r"(\+?56)?9\d{8}", tel):
+    if not re.fullmatch(r"\+56\d{9}", tel):
         return False, (
             "El teléfono debe tener formato válido. "
             "Ejemplo: +56912345678"

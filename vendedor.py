@@ -224,7 +224,11 @@ def render_vendedor():
     st.session_state.setdefault("correo_input", "")
     st.session_state.setdefault("comprador_buscado", "")
 
-    nombre_actual = st.text_input("Nombre comprador", key="nombre_comprador_input")
+    nombre_actual = st.text_input(
+        "Nombre comprador",
+        key="nombre_comprador_input",
+        placeholder="Ej: Patricio Achurra"
+    )
 
     # Autocompletado simple:
     # Si el nombre cambia y existe en el directorio, se rellenan teléfono y correo.
@@ -237,8 +241,29 @@ def render_vendedor():
             st.toast("Datos del comprador encontrados y autocompletados.")
             st.rerun()
 
-    telefono = st.text_input("Teléfono", key="telefono_input")
-    correo = st.text_input("Correo", key="correo_input")
+    col_prefijo, col_numero = st.columns([1, 5])
+
+    with col_prefijo:
+        st.text_input(
+            "Código",
+            value="+56",
+            disabled=True
+        )
+
+    with col_numero:
+        telefono_numero = st.text_input(
+            "Teléfono",
+            key="telefono_input",
+            placeholder="Ej: 987654321"
+        )
+
+    telefono = f"+56{telefono_numero.strip()}"
+        
+    correo = st.text_input(
+        "Correo",
+        key="correo_input",
+        placeholder="Ej: pato_achurra@mail.com"
+    )
 
     pagado_alumno = st.checkbox(
         "El valor de los números será pagado al estudiante responsable de la venta",
