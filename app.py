@@ -166,17 +166,11 @@ def login():
                 st.session_state.autenticado = True
                 st.session_state.perfil = "vendedor"
                 st.session_state.nombre_vendedor_activo = nombre_alumno
-
-                st.empty()
-
                 st.rerun()
 
             elif perfil == "Administrador" and clave == config["clave_admin"]:
                 st.session_state.autenticado = True
                 st.session_state.perfil = "administrador"
-
-                st.empty()
-                
                 st.rerun()
 
             else:
@@ -194,15 +188,8 @@ def main():
     inicializar_estado()
 
     if not st.session_state.autenticado:
-
-        contenedor_login = st.empty()
-
-        with contenedor_login.container():
-            login()
-
+        login()
         return
-
-    st.empty()
 
     barra_superior()
 
@@ -215,3 +202,7 @@ def main():
     else:
         st.error("Perfil no reconocido.")
         cerrar_sesion()
+
+
+if __name__ == "__main__":
+    main()
