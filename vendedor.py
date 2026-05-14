@@ -32,6 +32,7 @@ def _limpiar_formulario_numero():
         "numeros_seleccionados",
         "nombre_comprador_input",
         "telefono_input",
+        "telefono_input_visible",
         "correo_input",
         "comprador_buscado",
     ]:
