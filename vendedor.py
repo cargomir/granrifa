@@ -299,9 +299,21 @@ def render_vendedor():
     )
 
     pagado_alumno = st.checkbox(
-        f"El valor de los números será pagado al estudiante **{st.session_state.nombre_vendedor_activo}**",
+        f"El valor de los números será pagado directamente a **{st.session_state.nombre_vendedor_activo}**",
         value=True
     )
+
+    if not pagado_alumno:
+
+        st.warning(
+            f"""
+    Solo desmarca esta opción si deseas pagar mediante transferencia a la cuenta del curso.
+
+    En ese caso, deberás enviar el comprobante de pago a la tesorera de la directiva de apoderados dentro de un plazo máximo de **{horas} hora(s)**.
+
+    Después de ese tiempo, los números seleccionados volverán a estar disponibles automáticamente.
+    """
+        )
 
     # -----------------------------
     # Paso 3: Botones de acción
