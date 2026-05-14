@@ -372,6 +372,11 @@ def render_administracion():
 
     config = db.obtener_configuracion()
 
+    usar_fecha = st.checkbox(
+        "Definir fecha de lanzamiento",
+        value=bool(config.get("fecha_rifa"))
+    )
+
     with st.form("form_configuracion"):
         n = st.number_input("Cantidad total de números (n)", min_value=1, step=1, value=int(config["n"]))
         p = st.number_input("Precio por número (p)", min_value=0, step=100, value=int(config["p"]))
@@ -387,8 +392,6 @@ def render_administracion():
             value=config.get("premios", ""),
             placeholder="Ej: 1° premio: Gift card..."
         )
-
-        usar_fecha = st.checkbox("Definir fecha de lanzamiento")
 
         fecha_rifa = None
 
