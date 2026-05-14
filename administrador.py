@@ -583,9 +583,12 @@ def render_tirar_rifa():
 
         components.html(html_ganador, height=320)
 
-        nombre_ganador = db.obtener_ganador_por_numero(ganador)
+        info_ganador = db.obtener_ganador_por_numero(ganador)
 
-        if nombre_ganador:
+        if info_ganador:
+
+            nombre_ganador = info_ganador["nombre_ganador"]
+            nombre_vendedor = info_ganador["nombre_vendedor"]
 
             html_nombre_ganador = f"""
             <div style="
@@ -615,6 +618,16 @@ def render_tirar_rifa():
                     line-height:1.2;
                 ">
                     {nombre_ganador}
+                </div>
+
+                <div style="
+                    margin-top:18px;
+                    font-size:18px;
+                    font-weight:600;
+                    color:#8A5A00;
+                ">
+                    Número vendido por:<br>
+                    <strong>{nombre_vendedor}</strong>
                 </div>
 
             </div>
