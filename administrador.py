@@ -640,4 +640,38 @@ def render_tirar_rifa():
             components.html(html_nombre_ganador, height=250)
 
         else:
-            st.warning("El número ganador no tiene comprador asociado.")
+            st.markdown(
+                """
+                <div style="
+                    max-width:520px;
+                    margin:20px auto;
+                    background-color:#FFF3CD;
+                    border:3px solid #FFC107;
+                    border-radius:24px;
+                    padding:26px;
+                    text-align:center;
+                    color:#7A4F00;
+                    box-shadow:0 12px 28px rgba(255,193,7,0.25);
+                    font-family:Arial, sans-serif;
+                ">
+
+                    <div style="
+                        font-size:28px;
+                        font-weight:900;
+                        margin-bottom:12px;
+                    ">
+                        💦 ¡Número al agua! 💦
+                    </div>
+
+                    <div style="
+                        font-size:20px;
+                        font-weight:700;
+                        line-height:1.5;
+                    ">
+                        ⚠️ Oopps, el número ganador no tiene comprador asociado.
+                    </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
