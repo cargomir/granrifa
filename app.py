@@ -52,8 +52,18 @@ def login():
                 font-weight: bold;
                 color: #1565C0;
                 font-size: 30px;
+                margin-bottom: 6px;
             '>
-            Selecciona tu perfil y luego ingresa tu contraseña.
+            Bienvenido a la gran rifa del 8° A del Colegio Gabriela Mistral
+            </p>
+
+            <p style='
+                text-align: center;
+                color: #D32F2F;
+                font-size: 14px;
+                margin-top: 0px;
+            '>
+            Selecciona tu perfil y luego ingresa tu contraseña
             </p>
             """,
             unsafe_allow_html=True
