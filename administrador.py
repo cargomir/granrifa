@@ -633,7 +633,7 @@ def render_tirar_rifa():
             </div>
             """
 
-            components.html(html_nombre_ganador, height=180)
+            components.html(html_nombre_ganador, height=250)
 
         else:
             st.warning("El número ganador no tiene comprador asociado.")
