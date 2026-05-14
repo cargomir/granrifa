@@ -180,7 +180,6 @@ def render_vendedor():
     st.markdown("""
     <style>
 
-    /* Pills normales */
     button[kind="pills"] {
         background-color: #E3F2FD !important;
         color: #1565C0 !important;
@@ -189,11 +188,20 @@ def render_vendedor():
         font-weight: 600 !important;
     }
 
-    /* Pills seleccionadas */
     button[kind="pills"][aria-pressed="true"] {
         background-color: #1565C0 !important;
         color: white !important;
         border: 1px solid #1565C0 !important;
+    }
+
+    div[data-testid="stPills"] div[role="group"] {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    div[data-testid="stPills"] button {
+        width: 100% !important;
     }
 
     </style>
