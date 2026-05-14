@@ -3,7 +3,6 @@ import streamlit.components.v1 as components
 import pandas as pd
 import db
 from streamlit_autorefresh import st_autorefresh
-from streamlit_searchbox import st_searchbox
 
 def mostrar_contador_expiracion(id_compra: str):
     tiempo = db.tiempo_restante_compra(id_compra)
@@ -225,13 +224,11 @@ def render_vendedor():
     st.session_state.setdefault("correo_input", "")
     st.session_state.setdefault("comprador_buscado", "")
 
-    nombre_actual = st_searchbox(
-        db.buscar_compradores,
-        placeholder="Ej: Patricio Achurra",
-        label="Nombre comprador",
-        key="nombre_comprador_search"        
+    nombre_actual = st.text_input(
+        "Nombre comprador",
+        key="nombre_comprador_input",
+        placeholder="Ej: Patricio Achurra"
     )
-
     # Autocompletado simple:
     # Si el nombre cambia y existe en el directorio, se rellenan teléfono y correo.
     if nombre_actual and nombre_actual != st.session_state.get("comprador_buscado", ""):
