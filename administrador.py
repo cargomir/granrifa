@@ -412,6 +412,56 @@ def render_administracion():
         st.rerun()
 
     st.divider()
+    st.subheader("Reiniciar rifa")
+
+    st.warning(
+        "⚠️ Esta acción eliminará todas las compras y reiniciará todos los números de la rifa."
+    )
+
+    if "confirmar_reset_rifa" not in st.session_state:
+        st.session_state["confirmar_reset_rifa"] = False
+
+    if st.button(
+        "🗑️ Reiniciar compras y números",
+        type="secondary"
+    ):
+        st.session_state["confirmar_reset_rifa"] = True
+
+    if st.session_state["confirmar_reset_rifa"]:
+
+        @st.dialog("Confirmar reinicio")
+        def confirmar_reinicio():
+
+            st.error(
+                "Esta acción eliminará todas las compras y reiniciará el estado de los números.\n\n"
+                "No se puede deshacer."
+            )
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("Cancelar", width="stretch"):
+                    st.session_state["confirmar_reset_rifa"] = False
+                    st.rerun()
+
+            with col2:
+                if st.button(
+                    "Sí, reiniciar",
+                    type="primary",
+                    width="stretch"
+                ):
+
+                    db.reiniciar_rifa()
+
+                    st.session_state["confirmar_reset_rifa"] = False
+
+                    st.success("La rifa fue reiniciada correctamente.")
+
+                    st.rerun()
+
+        confirmar_reinicio()
+
+    st.divider()
     st.subheader("Exportación")
 
     datos_numeros = db.exportar_todos_los_numeros()

@@ -269,6 +269,20 @@ def buscar_compradores(searchterm: str) -> List[str]:
         r["nombre_comprador"]
         for r in _data(resp)
     ]  
+
+def reiniciar_rifa():
+
+    supabase.table("compras").delete().neq("id_compra", "").execute()
+
+    supabase.table("numeros") \
+        .update({
+            "estado": "disponible",
+            "id_compra": None,
+            "id_comprador": None,
+            "precio_unitario": None
+        }) \
+        .neq("numero", 0) \
+        .execute()
 # ============================================================
 # Expiración de reservas
 # ============================================================
