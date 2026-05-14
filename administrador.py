@@ -370,6 +370,10 @@ def render_resumen():
 def render_administracion():
     st.subheader("Configuración de la rifa")
 
+    if "mensaje_configuracion" in st.session_state:
+        st.success(st.session_state["mensaje_configuracion"])
+        del st.session_state["mensaje_configuracion"]
+
     config = db.obtener_configuracion()
 
     usar_fecha = st.checkbox(
@@ -431,9 +435,9 @@ def render_administracion():
             insertados = db.asegurar_numeros_hasta_n(n_final)
 
         if insertados > 0:
-            st.success(f"Configuración guardada. Se agregaron {insertados} números nuevos.")
+            st.session_state["mensaje_configuracion"] = f"Configuración guardada. Se agregaron {insertados} números nuevos."
         else:
-            st.success("Configuración guardada. No fue necesario agregar números nuevos.")
+            st.session_state["mensaje_configuracion"] = "Configuración guardada correctamente."
 
         st.rerun()
 
