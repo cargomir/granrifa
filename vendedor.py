@@ -38,6 +38,8 @@ def _limpiar_formulario_numero():
     ]:
         st.session_state.pop(k, None)
 
+    st.session_state["pagado_alumno"] = True
+    
     st.session_state["telefono_key_version"] = (
             st.session_state.get("telefono_key_version", 0) + 1
     )
@@ -465,7 +467,7 @@ def render_vendedor():
 
             st.write(f"**Fecha:** {compra['fecha_hora_compra']}")
             st.write(f"**Comprador:** {compra['comprador']}")
-            st.write(f"**Estado pago:** {compra['pagado']}")
+            st.write(f"**Pagado:** {compra['pagado']}")
             st.write(f"**Forma de pago:** {compra['forma_pago']}")
             st.write(f"**Cantidad de números:** {compra['cantidad']}")
             st.write(
