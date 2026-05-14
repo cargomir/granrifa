@@ -587,40 +587,40 @@ def render_tirar_rifa():
 
         if nombre_ganador:
 
-            st.markdown(
-                f"""
+            html_nombre_ganador = f"""
+            <div style="
+                max-width:520px;
+                margin:20px auto;
+                background-color:#FFF3CD;
+                border:3px solid #FFC107;
+                border-radius:24px;
+                padding:26px;
+                text-align:center;
+                color:#7A4F00;
+                box-shadow:0 12px 28px rgba(255,193,7,0.25);
+                font-family:Arial, sans-serif;
+            ">
+
                 <div style="
-                    max-width:520px;
-                    margin:20px auto;
-                    background-color:#FFF3CD;
-                    border:3px solid #FFC107;
-                    border-radius:24px;
-                    padding:26px;
-                    text-align:center;
-                    color:#7A4F00;
-                    box-shadow:0 12px 28px rgba(255,193,7,0.25);
+                    font-size:22px;
+                    font-weight:800;
+                    margin-bottom:12px;
                 ">
-
-                    <div style="
-                        font-size:22px;
-                        font-weight:800;
-                        margin-bottom:12px;
-                    ">
-                        🏆 Ganador/a 🏆
-                    </div>
-
-                    <div style="
-                        font-size:34px;
-                        font-weight:900;
-                        line-height:1.2;
-                    ">
-                        {nombre_ganador}
-                    </div>
-
+                    🏆 Ganador/a 🏆
                 </div>
-                """,
-                unsafe_allow_html=True
-            )
+
+                <div style="
+                    font-size:34px;
+                    font-weight:900;
+                    line-height:1.2;
+                ">
+                    {nombre_ganador}
+                </div>
+
+            </div>
+            """
+
+            components.html(html_nombre_ganador, height=180)
 
         else:
             st.warning("El número ganador no tiene comprador asociado.")
