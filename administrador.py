@@ -586,37 +586,41 @@ def render_tirar_rifa():
         nombre_ganador = db.obtener_ganador_por_numero(ganador)
 
         if nombre_ganador:
+
             st.markdown(
                 f"""
                 <div style="
-                    max-width: 520px;
-                    margin: 20px auto;
-                    background-color: #FFF3CD;
-                    border: 3px solid #FFC107;
-                    border-radius: 24px;
-                    padding: 26px;
-                    text-align: center;
-                    color: #7A4F00;
-                    box-shadow: 0 12px 28px rgba(255,193,7,0.25);
+                    max-width:520px;
+                    margin:20px auto;
+                    background-color:#FFF3CD;
+                    border:3px solid #FFC107;
+                    border-radius:24px;
+                    padding:26px;
+                    text-align:center;
+                    color:#7A4F00;
+                    box-shadow:0 12px 28px rgba(255,193,7,0.25);
                 ">
+
                     <div style="
-                        font-size: 22px;
-                        font-weight: 800;
-                        margin-bottom: 10px;
+                        font-size:22px;
+                        font-weight:800;
+                        margin-bottom:12px;
                     ">
                         🏆 Ganador/a 🏆
                     </div>
 
                     <div style="
-                        font-size: 34px;
-                        font-weight: 900;
-                        line-height: 1.2;
+                        font-size:34px;
+                        font-weight:900;
+                        line-height:1.2;
                     ">
                         {nombre_ganador}
                     </div>
+
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+
         else:
             st.warning("El número ganador no tiene comprador asociado.")
