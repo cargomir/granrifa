@@ -34,6 +34,7 @@ def _limpiar_formulario_numero():
         "telefono_input",
         "correo_input",
         "comprador_buscado",
+        "pagado_alumno"
     ]:
         st.session_state.pop(k, None)
 
@@ -300,7 +301,8 @@ def render_vendedor():
 
     pagado_alumno = st.checkbox(
         f"El valor de los números será pagado directamente a **{st.session_state.nombre_vendedor_activo}**",
-        value=True
+        value=True,
+        key="pagado_alumno"
     )
 
 
@@ -418,6 +420,33 @@ def render_vendedor():
         ):
             reservar()
 
+    if not pagado_alumno:
+
+        horas = t_actual // 60
+        minutos = t_actual % 60
+
+        if minutos == 0:
+            tiempo_texto = f"{horas} hora(s)"
+        else:
+            tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
+
+        st.info(
+            f"""
+    ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de **{tiempo_texto}** desde la reserva.
+
+    Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
+
+    ### Datos de transferencia
+
+    - **Nombre:** Susan Velozo Catalán
+    - **Correo electrónico:** susanvelozo@hotmail.com
+    - **Tipo de cuenta:** Vista
+    - **RUT:** 16.956.509-0
+    - **Banco:** Mercado Pago
+    - **Nº de cuenta:** 1097008263
+    """
+        )
+
     ventas_alumno = db.compras_por_alumno(
         st.session_state.nombre_vendedor_activo
     )
@@ -445,30 +474,6 @@ def render_vendedor():
             st.write(f"**Números:** {compra['numeros']}")
 
             if compra["pagado"] != "Sí":
-                horas = t_actual // 60
-                minutos = t_actual % 60
-
-                if minutos == 0:
-                    tiempo_texto = f"{horas} hora(s)"
-                else:
-                    tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
-
-                st.markdown(
-                    f"""
-    > ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de {tiempo_texto} desde la reserva.  
-    > Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
-
-    ### Datos de transferencia
-
-    - **Nombre:** Susan Velozo Catalán  
-    - **Correo electrónico:** susanvelozo@hotmail.com  
-    - **Tipo de cuenta:** Vista  
-    - **RUT:** 16.956.509-0  
-    - **Banco:** Mercado Pago  
-    - **Nº de cuenta:** 1097008263
-    """
-                )
-
                 mostrar_contador_expiracion(compra["id_compra"])
 
             _mostrar_reservados(compra["id_compra"])
