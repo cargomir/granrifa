@@ -238,8 +238,17 @@ def render_vendedor():
         comprador = db.obtener_comprador_por_nombre(nombre_actual.strip())
         st.session_state["comprador_buscado"] = nombre_actual
         if comprador:
-            st.session_state["telefono_input"] = comprador.get("telefono") or ""
+            telefono_completo = comprador.get("telefono") or ""
+
+            if telefono_completo.startswith("+56"):
+                telefono_visible = telefono_completo[3:]
+            else:
+                telefono_visible = telefono_completo
+
+            st.session_state["telefono_input"] = telefono_completo
+            st.session_state["telefono_input_visible"] = telefono_visible
             st.session_state["correo_input"] = comprador.get("correo") or ""
+
             st.toast("Datos del comprador encontrados y autocompletados.")
             st.rerun()
 
@@ -252,15 +261,9 @@ def render_vendedor():
             disabled=True
         )
 
-    telefono_guardado = st.session_state.get("telefono_input", "")
-
-    if telefono_guardado.startswith("+56"):
-        telefono_guardado = telefono_guardado[3:]
-
     with col_numero:
         telefono_numero = st.text_input(
             "Teléfono",
-            value=telefono_guardado,
             key="telefono_input_visible",
             placeholder="Ejemplo: 223456789"
         )
