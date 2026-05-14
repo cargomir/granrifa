@@ -119,6 +119,20 @@ def login():
             horizontal=True
         )
 
+        nombre_alumno = None
+
+        if perfil == "Alumno":
+            alumnos = db.listar_alumnos()
+
+            if not alumnos:
+                st.warning("No hay alumnos cargados en la tabla 'alumnos'.")
+                return
+
+            nombre_alumno = st.selectbox(
+                "Selecciona tu nombre",
+                alumnos
+            )
+
         clave = st.text_input(
             "Contraseña",
             type="password"
@@ -129,6 +143,7 @@ def login():
             if perfil == "Alumno" and clave == config["clave_vendedor"]:
                 st.session_state.autenticado = True
                 st.session_state.perfil = "vendedor"
+                st.session_state.nombre_vendedor_activo = nombre_alumno
                 st.success("Acceso alumno correcto.")
                 st.rerun()
 

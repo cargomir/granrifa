@@ -246,35 +246,15 @@ def render_vendedor():
         st.session_state.nombre_vendedor_activo = None
     if "compras_cerradas_sesion" not in st.session_state:
         st.session_state.compras_cerradas_sesion = []
-    # -----------------------------
-    # Paso 1: Identificación vendedor
-    # -----------------------------
-    if not st.session_state.nombre_vendedor_activo:
-        st.subheader("Paso 1 — Identificación del vendedor")
-
-        alumnos = db.listar_alumnos()
-        if not alumnos:
-            st.warning("No hay alumnos cargados en la tabla 'alumnos'. Agrega al menos uno en Supabase.")
-            return
-
-        nombre_vendedor = st.selectbox("Selecciona tu nombre", alumnos)
-
-        if st.button("Confirmar vendedor", type="primary"):
-            st.session_state.id_compra_activa = None
-            st.session_state.nombre_vendedor_activo = nombre_vendedor
-            st.success("Vendedor confirmado. Ahora selecciona los números.")
-            st.rerun()
-
-        return
-
+    
     st.info(f"Vendedor activo: **{st.session_state.nombre_vendedor_activo}**")
 
     mostrar_grilla_numeros()
 
     # -----------------------------
-    # Paso 2: Selección de número
+    # Paso 1: Selección de número
     # -----------------------------
-    st.subheader("Paso 2 — Selección de número")
+    st.subheader("Paso 1 — Selección de número")
 
     disponibles = db.listar_numeros_disponibles()
 
@@ -302,9 +282,9 @@ def render_vendedor():
     st.caption("La lista se actualiza automáticamente cada 30 segundos para bloquear números tomados por otros vendedores.")
     
     # -----------------------------
-    # Paso 3: Datos comprador
+    # Paso 2: Datos comprador
     # -----------------------------
-    st.subheader("Paso 3 — Datos del comprador")
+    st.subheader("Paso 2 — Datos del comprador")
 
     st.session_state.setdefault("nombre_comprador_input", "")
     st.session_state.setdefault("telefono_input", "")
@@ -328,12 +308,12 @@ def render_vendedor():
     correo = st.text_input("Correo", key="correo_input")
 
     pagado_alumno = st.checkbox(
-        "El valor de los números será pagado al estudiante",
+        "El valor de los números será pagado al estudiante responsable de la venta",
         value=True
     )
 
     # -----------------------------
-    # Paso 4: Botones de acción
+    # Paso 3: Botones de acción
     # -----------------------------
     col_izq, col_centro, col_der = st.columns([1, 1, 1])
 
@@ -442,11 +422,25 @@ def render_vendedor():
             else:
                 tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
 
-            st.warning(
-                f"El pago debe realizarse en un plazo máximo de {tiempo_texto} "
-                "desde la reserva. Si no se confirma el pago, los números "
-                "volverán a estar disponibles automáticamente."
-            )
+            numeros_compra = db.numeros_de_compra(id_compra)
+            compra_pagada = all(n["estado"] == "pagado" for n in numeros_compra)
 
-            mostrar_contador_expiracion(id_compra)
+            if not compra_pagada:
+                st.warning(
+                    f"El pago debe transferirse a la cuenta del curso en un plazo máximo de "
+                    f"{tiempo_texto} desde la reserva. Si no se confirma el pago, "
+                    "los números volverán a estar disponibles automáticamente.\n\n"
+
+                    "La cuenta para realizar la transferencia es:\n"
+
+                    "Nombre: Susan Velozo Catalan\n"
+                    "Correo electrónico: susanvelozo@hotmail.com\n"
+                    "Tipo de cuenta: Vista\n"
+                    "RUT: 16.956.509-0\n"
+                    "Banco: Mercado Pago\n"
+                    "Nº de cuenta: 1097008263"
+                )
+
+                mostrar_contador_expiracion(id_compra)
+
             _mostrar_reservados(id_compra)
