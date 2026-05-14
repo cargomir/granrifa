@@ -207,8 +207,19 @@ def render_vendedor():
     </style>
     """, unsafe_allow_html=True)
 
+    st.markdown("""
+    <div style="
+        font-size:22px;
+        font-weight:700;
+        margin-bottom:16px;
+    ">
+    A continuación se muestran los números disponibles.<br>
+    Pincha todos los números que deseas comprar.
+    </div>
+    """, unsafe_allow_html=True)
+
     numeros_seleccionados = st.pills(
-        "A continuación se muestran los números disponibles. Selecciona todos los números que deseas comprar.",
+        "",
         disponibles,
         selection_mode="multi",
         key="numeros_seleccionados",
