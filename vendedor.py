@@ -209,12 +209,11 @@ def render_vendedor():
 
     st.markdown("""
     <div style="
-        font-size:22px;
+        font-size:18px;
         font-weight:700;
         margin-bottom:16px;
     ">
-    A continuación se muestran los números disponibles.<br>
-    Pincha todos los números que deseas comprar.
+    A continuación se muestran los números disponibles. Pincha todos los números que deseas comprar.
     </div>
     """, unsafe_allow_html=True)
 
