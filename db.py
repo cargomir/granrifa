@@ -272,8 +272,7 @@ def buscar_compradores(searchterm: str) -> List[str]:
 
 def reiniciar_rifa():
 
-    supabase.table("compras").delete().neq("id_compra", "").execute()
-
+    # Primero liberar números, para romper la relación con compras
     supabase.table("numeros") \
         .update({
             "estado": "disponible",
@@ -281,8 +280,15 @@ def reiniciar_rifa():
             "id_comprador": None,
             "precio_unitario": None
         }) \
-        .neq("numero", 0) \
+        .gte("numero", 1) \
         .execute()
+
+    # Luego borrar compras
+    supabase.table("compras") \
+        .delete() \
+        .gte("fecha_hora_compra", "1900-01-01") \
+        .execute()
+    
 # ============================================================
 # Expiración de reservas
 # ============================================================
