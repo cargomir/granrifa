@@ -585,10 +585,14 @@ def render_tirar_rifa():
 
         info_ganador = db.obtener_ganador_por_numero(ganador)
 
-        if info_ganador:
+        if (
+            info_ganador
+            and info_ganador.get("nombre_ganador")
+            and info_ganador.get("nombre_vendedor")
+        ):
 
-            nombre_ganador = info_ganador["nombre_ganador"]
-            nombre_vendedor = info_ganador["nombre_vendedor"]
+            nombre_ganador = info_ganador.get("nombre_ganador")
+            nombre_vendedor = info_ganador.get("nombre_vendedor")
 
             html_nombre_ganador = f"""
             <div style="
