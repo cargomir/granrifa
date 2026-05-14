@@ -327,6 +327,11 @@ def render_vendedor():
     telefono = st.text_input("Teléfono", key="telefono_input")
     correo = st.text_input("Correo", key="correo_input")
 
+    pagado_alumno = st.checkbox(
+        "El valor de los números será pagado al estudiante",
+        value=True
+    )
+
     # -----------------------------
     # Paso 4: Botones de acción
     # -----------------------------
@@ -356,7 +361,8 @@ def render_vendedor():
             return
 
         id_compra_actual = db.crear_compra(
-            st.session_state.nombre_vendedor_activo
+            st.session_state.nombre_vendedor_activo,
+            pagado_alumno=pagado_alumno
         )
 
         st.session_state.id_compra_activa = id_compra_actual
@@ -382,6 +388,9 @@ def render_vendedor():
                 "Números reservados correctamente: " +
                 ", ".join(str(x) for x in exitos)
             )
+
+        if pagado_alumno and exitos:
+            db.marcar_numeros_compra_pagados(id_compra_actual)
 
         if errores:
             for e in errores:

@@ -58,14 +58,20 @@ def listar_alumnos() -> List[str]:
     return [r["nombre_alumno"] for r in _data(resp)]
 
 
-def crear_compra(nombre_alumno_vendedor: str) -> str:
+def crear_compra(nombre_alumno_vendedor: str, pagado_alumno: bool = False) -> str:
     resp = supabase.table("compras").insert({
         "nombre_alumno_vendedor": nombre_alumno_vendedor,
-        "pagado": "No",
-        "forma_pago": "Pendiente"
+        "pagado": "Sí" if pagado_alumno else "No",
+        "forma_pago": "Efectivo" if pagado_alumno else "Pendiente"
     }).execute()
+
     data = _data(resp)
     return data[0]["id_compra"]
+
+def marcar_numeros_compra_pagados(id_compra: str) -> None:
+    supabase.table("numeros").update({
+        "estado": "pagado"
+    }).eq("id_compra", id_compra).eq("estado", "reservado").execute()
 
 def validar_telefono(telefono: str) -> tuple[bool, str]:
     """
