@@ -663,7 +663,7 @@ def render_tirar_rifa():
                 </div>
 
                 <div style="
-                    font-size:20px;
+                    font-size:16px;
                     font-weight:700;
                     line-height:1.5;
                 ">
