@@ -303,13 +303,22 @@ def render_vendedor():
         value=True
     )
 
+
     if not pagado_alumno:
+
+        horas = t_actual // 60
+        minutos = t_actual % 60
+
+        if minutos == 0:
+            tiempo_texto = f"{horas} hora(s)"
+        else:
+            tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
 
         st.warning(
             f"""
-    Solo desmarca esta opción si deseas pagar mediante transferencia a la cuenta del curso.
+    ⚠️ Solo desmarca esta opción si deseas pagar mediante transferencia a la cuenta del curso.
 
-    En ese caso, deberás enviar el comprobante de pago a la tesorera de la directiva de apoderados dentro de un plazo máximo de **{horas} hora(s)**.
+    En ese caso, deberás enviar el comprobante de pago a la tesorera de la directiva de apoderados dentro de un plazo máximo de **{tiempo_texto}**.
 
     Después de ese tiempo, los números seleccionados volverán a estar disponibles automáticamente.
     """
