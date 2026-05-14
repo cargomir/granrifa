@@ -208,7 +208,7 @@ def render_vendedor():
     """, unsafe_allow_html=True)
 
     numeros_seleccionados = st.pills(
-        "Números disponibles",
+        "A continuación se muestran los números disponibles. Selecciona todos los números que deseas comprar.",
         disponibles,
         selection_mode="multi",
         key="numeros_seleccionados",
