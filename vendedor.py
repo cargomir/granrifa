@@ -340,41 +340,52 @@ def render_vendedor():
         ):
             reservar()
 
-    if st.session_state.compras_cerradas_sesion:
+    ventas_alumno = db.compras_por_alumno(
+        st.session_state.nombre_vendedor_activo
+    )
+
+    if ventas_alumno:
         st.divider()
-        st.subheader("Compras reservadas en esta sesión")
+        st.subheader("Ventas realizadas por este alumno")
 
-        for i, id_compra in enumerate(st.session_state.compras_cerradas_sesion, start=1):
-            st.markdown(f"### Compra {i}")
+        for i, compra in enumerate(ventas_alumno, start=1):
+            st.markdown(f"### Venta {i}")
 
-            horas = t_actual // 60
-            minutos = t_actual % 60
+            st.write(f"**Fecha:** {compra['fecha_hora_compra']}")
+            st.write(f"**Comprador:** {compra['comprador']}")
+            st.write(f"**Estado pago:** {compra['pagado']}")
+            st.write(f"**Forma de pago:** {compra['forma_pago']}")
+            st.write(f"**Cantidad de números:** {compra['cantidad']}")
+            st.write(
+                f"**Total:** ${compra['total']:,.0f}".replace(",", ".")
+            )
+            st.write(f"**Números:** {compra['numeros']}")
 
-            if minutos == 0:
-                tiempo_texto = f"{horas} hora(s)"
-            else:
-                tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
+            if compra["pagado"] != "Sí":
+                horas = t_actual // 60
+                minutos = t_actual % 60
 
-            numeros_compra = db.numeros_de_compra(id_compra)
-            compra_pagada = all(n["estado"] == "pagado" for n in numeros_compra)
+                if minutos == 0:
+                    tiempo_texto = f"{horas} hora(s)"
+                else:
+                    tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
 
-            if not compra_pagada:
                 st.markdown(
                     f"""
-                > ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de {tiempo_texto} desde la reserva.  
-                > Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
+    > ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de {tiempo_texto} desde la reserva.  
+    > Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
 
-                ### Datos de transferencia
+    ### Datos de transferencia
 
-                - **Nombre:** Susan Velozo Catalan  
-                - **Correo electrónico:** susanvelozo@hotmail.com  
-                - **Tipo de cuenta:** Vista  
-                - **RUT:** 16.956.509-0  
-                - **Banco:** Mercado Pago  
-                - **Nº de cuenta:** 1097008263
-                """
+    - **Nombre:** Susan Velozo Catalan  
+    - **Correo electrónico:** susanvelozo@hotmail.com  
+    - **Tipo de cuenta:** Vista  
+    - **RUT:** 16.956.509-0  
+    - **Banco:** Mercado Pago  
+    - **Nº de cuenta:** 1097008263
+    """
                 )
 
-                mostrar_contador_expiracion(id_compra)
+                mostrar_contador_expiracion(compra["id_compra"])
 
-            _mostrar_reservados(id_compra)
+            _mostrar_reservados(compra["id_compra"])

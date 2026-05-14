@@ -409,6 +409,61 @@ def numeros_de_compra(id_compra: str) -> List[Dict[str, Any]]:
         })
     return salida
 
+def compras_por_alumno(nombre_alumno: str) -> List[Dict[str, Any]]:
+    resp = (
+        supabase.table("compras")
+        .select("""
+            id_compra,
+            fecha_hora_compra,
+            pagado,
+            forma_pago,
+            numeros(
+                numero,
+                estado,
+                precio_unitario,
+                compradores(nombre_comprador)
+            )
+        """)
+        .eq("nombre_alumno_vendedor", nombre_alumno)
+        .order("fecha_hora_compra", desc=True)
+        .execute()
+    )
+
+    compras = _data(resp)
+    salida = []
+
+    for c in compras:
+        nums = c.get("numeros", [])
+
+        if not nums:
+            continue
+
+        total = sum(float(n.get("precio_unitario") or 0) for n in nums)
+
+        compradores = sorted(set(
+            (n.get("compradores") or {}).get("nombre_comprador", "")
+            for n in nums
+            if (n.get("compradores") or {}).get("nombre_comprador", "")
+        ))
+
+        salida.append({
+            "id_compra": c["id_compra"],
+            "fecha_hora_compra": (
+                parsear_fecha_supabase(c.get("fecha_hora_compra")).strftime("%d-%m-%Y %H:%M:%S")
+                if c.get("fecha_hora_compra")
+                else ""
+            ),
+            "pagado": c.get("pagado"),
+            "forma_pago": c.get("forma_pago"),
+            "cantidad": len(nums),
+            "total": total,
+            "comprador": ", ".join(compradores),
+            "numeros": ", ".join(str(n.get("numero")) for n in nums),
+            "estados": ", ".join(str(n.get("estado")) for n in nums)
+        })
+
+    return salida
+
 def tiempo_restante_compra(id_compra: str) -> Dict[str, Any]:
     """
     Calcula el tiempo restante de una compra pendiente.
