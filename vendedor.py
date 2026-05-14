@@ -262,7 +262,7 @@ def render_vendedor():
         telefono_numero = st.text_input(
             "Teléfono",
             key="telefono_input_visible",
-            placeholder="Ejemplo: 223456789"
+            placeholder="Ej: 987654321"
         )
 
     telefono = f"+56{telefono_numero.strip()}"
@@ -360,13 +360,13 @@ def render_vendedor():
     formulario_incompleto = (
         not numeros_seleccionados
         or not nombre_actual.strip()
-        or not telefono.strip()
+        or not telefono_numero.strip()
         or not correo.strip()
     )
 
     with col_centro:
         if st.button(
-            "Reservar y cerrar compra",
+            "Finalizar compra",
             type="primary",
             disabled=formulario_incompleto,
             width=250
