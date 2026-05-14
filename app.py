@@ -166,13 +166,11 @@ def login():
                 st.session_state.autenticado = True
                 st.session_state.perfil = "vendedor"
                 st.session_state.nombre_vendedor_activo = nombre_alumno
-                st.success("Acceso alumno correcto.")
                 st.rerun()
 
             elif perfil == "Administrador" and clave == config["clave_admin"]:
                 st.session_state.autenticado = True
                 st.session_state.perfil = "administrador"
-                st.success("Acceso administrador correcto.")
                 st.rerun()
 
             else:
