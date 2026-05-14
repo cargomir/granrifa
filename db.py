@@ -798,3 +798,21 @@ def resumen_recaudacion() -> Dict[str, float]:
         "transferencia": transferencia,
         "total": efectivo + transferencia,
     }
+
+def obtener_ganador_por_numero(numero: int):
+    resp = (
+        supabase.table("numeros")
+        .select("numero, compradores(nombre_comprador)")
+        .eq("numero", int(numero))
+        .limit(1)
+        .execute()
+    )
+
+    data = _data(resp)
+
+    if not data:
+        return None
+
+    comprador = data[0].get("compradores") or {}
+
+    return comprador.get("nombre_comprador")
