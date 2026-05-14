@@ -152,7 +152,16 @@ def login():
 
         if st.button("Ingresar", type="primary", width="stretch"):
 
-            if perfil == "Alumno" and nombre_alumno is not None and clave == config["clave_vendedor"]:
+            if perfil == "Alumno":
+
+                if nombre_alumno is None:
+                    st.error("Debes seleccionar un alumno.")
+                    return
+
+                if clave != config["clave_vendedor"]:
+                    st.error("Contraseña incorrecta.")
+                    return
+
                 st.session_state.autenticado = True
                 st.session_state.perfil = "vendedor"
                 st.session_state.nombre_vendedor_activo = nombre_alumno
