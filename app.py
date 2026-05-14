@@ -129,8 +129,9 @@ def login():
                 return
 
             nombre_alumno = st.selectbox(
-                "Selecciona tu nombre",
-                alumnos
+                "Selecciona el nombre del estudiante al que le comprarás los números",
+                options=[None] + alumnos,
+                format_func=lambda x: "Selecciona el nombre del estudiante al que le comprarás los números" if x is None else x
             )
 
         clave = st.text_input(
@@ -140,7 +141,7 @@ def login():
 
         if st.button("Ingresar", type="primary", width="stretch"):
 
-            if perfil == "Alumno" and clave == config["clave_vendedor"]:
+            if perfil == "Alumno" and nombre_alumno is not None and clave == config["clave_vendedor"]:
                 st.session_state.autenticado = True
                 st.session_state.perfil = "vendedor"
                 st.session_state.nombre_vendedor_activo = nombre_alumno
