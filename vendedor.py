@@ -4,93 +4,6 @@ import pandas as pd
 import db
 from streamlit_autorefresh import st_autorefresh
 
-def mostrar_grilla_numeros():
-    st.subheader("Estado general de números")
-
-    numeros = db.listar_estado_numeros()
-
-    if not numeros:
-        st.info("No hay números cargados.")
-        return
-
-    st.markdown("""
-    <style>
-    .grid-rifa {
-        display: grid;
-        grid-template-columns: repeat(10, 1fr);
-        gap: 6px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-    .numero-rifa {
-        text-align: center;
-        padding: 8px 4px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        border: 1px solid #ddd;
-    }
-    .disponible {
-        background-color: #d4edda;
-        color: #155724;
-    }
-    .reservado {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-    .pagado {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-
-    .stDataFrame, .stDataEditor {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #e5e7eb;
-    }
-
-    [data-testid="stDataEditor"] table {
-        font-size: 15px;
-    }
-
-    /* Encabezados */
-    [data-testid="stDataEditor"] th {
-        background-color: #f3f4f6;
-        font-weight: 700 !important;
-        text-align: center !important;
-    }
-
-    /* Celdas */
-    [data-testid="stDataEditor"] td {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-align: center !important;
-    }
-
-    /* Centrar contenido interno */
-    [data-testid="stDataEditor"] td div {
-        justify-content: center !important;
-    }
-
-    [data-testid="stDataEditor"] th div {
-        justify-content: center !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    html = '<div class="grid-rifa">'
-
-    for item in numeros:
-        numero = item["numero"]
-        estado = item["estado"]
-        html += f'<div class="numero-rifa {estado}">{numero}</div>'
-
-    html += '</div>'
-
-    st.markdown(html, unsafe_allow_html=True)
-
-    st.caption("🟩 Disponible · 🟨 Reservado · 🟥 Pagado")
-
 def mostrar_contador_expiracion(id_compra: str):
     tiempo = db.tiempo_restante_compra(id_compra)
 
@@ -248,8 +161,6 @@ def render_vendedor():
         st.session_state.compras_cerradas_sesion = []
     
     st.info(f"Vendedor activo: **{st.session_state.nombre_vendedor_activo}**")
-
-    mostrar_grilla_numeros()
 
     # -----------------------------
     # Paso 1: Selección de número

@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 import pandas as pd
 import random
 from io import BytesIO
-
+from streamlit_autorefresh import st_autorefresh
 
 import db
 
@@ -86,7 +86,97 @@ def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
 
     components.html(html, height=height, scrolling=True)
 
+def mostrar_grilla_numeros():
+    st.subheader("Estado general de números")
+
+    numeros = db.listar_estado_numeros()
+
+    if not numeros:
+        st.info("No hay números cargados.")
+        return
+
+    st.markdown("""
+    <style>
+    .grid-rifa {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 6px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .numero-rifa {
+        text-align: center;
+        padding: 8px 4px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        border: 1px solid #ddd;
+    }
+    .disponible {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .reservado {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .pagado {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .stDataFrame, .stDataEditor {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    }
+
+    [data-testid="stDataEditor"] table {
+        font-size: 15px;
+    }
+
+    /* Encabezados */
+    [data-testid="stDataEditor"] th {
+        background-color: #f3f4f6;
+        font-weight: 700 !important;
+        text-align: center !important;
+    }
+
+    /* Celdas */
+    [data-testid="stDataEditor"] td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center !important;
+    }
+
+    /* Centrar contenido interno */
+    [data-testid="stDataEditor"] td div {
+        justify-content: center !important;
+    }
+
+    [data-testid="stDataEditor"] th div {
+        justify-content: center !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    html = '<div class="grid-rifa">'
+
+    for item in numeros:
+        numero = item["numero"]
+        estado = item["estado"]
+        html += f'<div class="numero-rifa {estado}">{numero}</div>'
+
+    html += '</div>'
+
+    st.markdown(html, unsafe_allow_html=True)
+
+    st.caption("🟩 Disponible · 🟨 Reservado · 🟥 Pagado")
+
 def render_administrador():
+
+    st_autorefresh(interval=30000, key="refresh_admin")
+    
     col_logo, col_titulo = st.columns([1, 8])
 
     with col_logo:
@@ -98,9 +188,10 @@ def render_administrador():
             unsafe_allow_html=True
         )
 
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Gestión de compras",
         "Resumen",
+        "Estado de números",
         "Tirar rifa",
         "Administración"        
     ])
@@ -112,9 +203,12 @@ def render_administrador():
         render_resumen()
 
     with tab3:
-        render_tirar_rifa()
+        mostrar_grilla_numeros()
 
     with tab4:
+        render_tirar_rifa()
+
+    with tab5:
         render_administracion()
 
 def render_gestion_compras():
@@ -196,7 +290,6 @@ def render_gestion_compras():
                 ],
                 height=320
             )
-
 
 def render_dashboard_visual():
     st.divider()
