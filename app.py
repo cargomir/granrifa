@@ -248,7 +248,12 @@ def barra_superior():
         )
 
     with col_boton:
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style='height:38px;'></div>
+            """,
+            unsafe_allow_html=True
+        )
 
         if st.button(
             "Cerrar sesión",
