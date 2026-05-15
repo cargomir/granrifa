@@ -256,18 +256,20 @@ def render_gestion_compras():
                 st.write(f"**Fecha compra:** {compra['fecha_hora_compra']}")
 
                 with st.expander("Confirmar pago"):
+
+                    opciones_pago = ["Transferencia", "Efectivo"]
+
                     forma_pago = st.selectbox(
                         "Forma de pago",
-                        ["", "Efectivo", "Transferencia"],
-                        key=f"forma_{compra['id_compra']}",
-                        format_func=lambda x: "Seleccione una opción" if x == "" else x
+                        opciones_pago,
+                        index=0,
+                        key=f"forma_{compra['id_compra']}"
                     )
 
                     if st.button(
                         "Confirmar",
                         key=f"confirmar_{compra['id_compra']}",
-                        type="primary",
-                        disabled=forma_pago == ""
+                        type="primary"
                     ):
                         db.confirmar_pago_compra(compra["id_compra"], forma_pago)
                         st.success("Pago confirmado. Todos los números de la compra quedaron pagados.")
