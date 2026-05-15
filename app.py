@@ -179,7 +179,7 @@ def login():
 
         perfil = st.radio(
             "Perfil de acceso",
-            ["Alumno", "Administrador"],
+            ["Alumno/Apoderado", "Administrador"],
             horizontal=True
         )
 
@@ -196,7 +196,7 @@ def login():
                 "Nombre alumno/a",
                 alumnos,
                 index=None,
-                placeholder="Selecciona el nombre del estudiante al que le comprarás los números"
+                placeholder="Selecciona al estudiante que venderá el número"
             )
 
         clave = st.text_input(
