@@ -260,13 +260,17 @@ def reiniciar_numeros_rifa(n):
             "numero": i,
             "estado": "disponible",
             "id_compra": None,
-            "fecha_hora_reserva": None
+            "id_comprador": None,
+            "fecha_hora_reserva": None,
+            "precio_unitario": None
         }
         for i in range(1, int(n) + 1)
     ]
 
     if nuevos:
         supabase.table("numeros").insert(nuevos).execute()
+
+    return len(nuevos)
 
 def buscar_compradores(searchterm: str) -> List[str]:
 
