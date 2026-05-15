@@ -158,16 +158,29 @@ def mostrar_grilla_numeros():
         numero = item["numero"]
         estado = item["estado"]
 
-        vendedor = item.get("vendedor") or "Sin vendedor"
-        comprador = item.get("comprador") or "Sin comprador"
+        if estado in ["reservado", "pagado"]:
 
-        tooltip = f"Vendedor: {vendedor} | Comprador: {comprador}"
+            vendedor = item.get("vendedor") or "Sin vendedor"
+            comprador = item.get("comprador") or "Sin comprador"
 
-        html += (
-            f'<div class="numero-rifa {estado}" title="{tooltip}">'
-            f'{numero}'
-            f'</div>'
-        )
+            tooltip = (
+                f"Vendedor: {vendedor}\n"
+                f"Comprador: {comprador}"
+            )
+
+            html += (
+                f'<div class="numero-rifa {estado}" title="{tooltip}">'
+                f'{numero}'
+                f'</div>'
+            )
+
+        else:
+
+            html += (
+                f'<div class="numero-rifa {estado}">'
+                f'{numero}'
+                f'</div>'
+            )
 
     html += '</div>'
 
