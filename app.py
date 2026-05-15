@@ -239,7 +239,7 @@ def barra_superior():
     col_logo, col_titulo, col_boton = st.columns([1, 4, 1])
 
     with col_logo:
-        st.image("logo.png", width=200)
+        st.image("logo.png", width=150)
 
     with col_titulo:
         st.markdown(
