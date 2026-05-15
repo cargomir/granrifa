@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import db
 from vendedor import render_vendedor
 from administrador import render_administrador
@@ -64,6 +65,30 @@ def login():
 
         premios = config.get("premios")
         fecha_rifa = config.get("fecha_rifa")
+
+        if fecha_rifa:
+            fecha_dt = pd.to_datetime(fecha_rifa)
+
+            meses = {
+                1: "enero",
+                2: "febrero",
+                3: "marzo",
+                4: "abril",
+                5: "mayo",
+                6: "junio",
+                7: "julio",
+                8: "agosto",
+                9: "septiembre",
+                10: "octubre",
+                11: "noviembre",
+                12: "diciembre"
+            }
+
+            fecha_rifa = (
+                f"{fecha_dt.day} de "
+                f"{meses[fecha_dt.month]} "
+                f"{fecha_dt.year}"
+            )
 
         if premios or fecha_rifa:
             st.markdown(
