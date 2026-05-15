@@ -3,6 +3,8 @@ import pandas as pd
 import db
 from vendedor import render_vendedor
 from administrador import render_administrador
+import base64
+from pathlib import Path
 
 
 st.set_page_config(
@@ -229,6 +231,14 @@ def login():
             else:
                 st.error("Contraseña incorrecta.")
 
+def get_imagen_base64(ruta: str) -> str:
+    """Convierte una imagen local a string base64 para usar en HTML."""
+    with open(ruta, "rb") as f:
+        data = f.read()
+    ext = Path(ruta).suffix.lstrip(".")  # png, jpg, etc.
+    return f"data:image/{ext};base64,{base64.b64encode(data).decode()}"
+
+
 def barra_superior():
 
     if st.session_state.perfil == "vendedor":
@@ -236,10 +246,10 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    # ── HTML navbar unificado (desktop + mobile) ──────────────────
+    logo_b64 = get_imagen_base64("logo.png")   # ← convierte el logo
+
     st.markdown(f"""
         <style>
-        /* Ocultar el header por defecto de Streamlit */
         header[data-testid="stHeader"] {{ display: none; }}
 
         .navbar {{
@@ -271,36 +281,15 @@ def barra_superior():
             font-weight: 700;
             color: #111827;
             margin: 0;
-            line-height: 1.2;
         }}
 
-        /* ── MOBILE ── */
         @media (max-width: 767px) {{
-            .navbar {{
-                padding: 8px 12px;
-            }}
-            .navbar-logo {{
-                height: 36px;
-            }}
-            .navbar-titulo {{
-                font-size: 0.95rem;
-            }}
+            .navbar {{ padding: 8px 12px; }}
+            .navbar-logo {{ height: 36px; }}
+            .navbar-titulo {{ font-size: 0.95rem; }}
         }}
-        </style>
 
-        <div class="navbar">
-            <div class="navbar-left">
-                <img src="logo.png" class="navbar-logo" alt="Logo">
-                <span class="navbar-titulo">{titulo}</span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # ── Botón real de Streamlit (funciona el callback) ────────────
-    # Se posiciona flotante arriba a la derecha via CSS
-    st.markdown("""
-        <style>
-        /* Apunta al primer botón del main y lo flota */
+        /* Botón cerrar sesión flotante */
         section[data-testid="stMain"] > div > div > div:first-child
             div[data-testid="stButton"] > button {{
             position: fixed;
@@ -312,6 +301,13 @@ def barra_superior():
             border-radius: 8px;
         }}
         </style>
+
+        <div class="navbar">
+            <div class="navbar-left">
+                <img src="{logo_b64}" class="navbar-logo" alt="Logo">
+                <span class="navbar-titulo">{titulo}</span>
+            </div>
+        </div>
     """, unsafe_allow_html=True)
 
     if st.button("Cerrar sesión", type="primary"):
