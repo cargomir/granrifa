@@ -385,11 +385,10 @@ def render_resumen():
 def render_administracion():
     st.subheader("Configuración de la rifa")
 
-    if "mensaje_configuracion" in st.session_state:
-        st.success(st.session_state["mensaje_configuracion"])
-        del st.session_state["mensaje_configuracion"]
-
     config = db.obtener_configuracion()
+
+    st.session_state.setdefault("confirmar_reduccion_n", False)
+    st.session_state.setdefault("config_pendiente", None)
 
     usar_fecha = st.checkbox(
         "Definir fecha de lanzamiento",
@@ -436,32 +435,82 @@ def render_administracion():
 
     if guardar:
         n_actual = int(config["n"])
-
         n_final = int(n)
 
-        db.guardar_configuracion(
-            n=n_final,
-            p=int(p),
-            t=int(t),
-            clave_vendedor=clave_vendedor,
-            clave_admin=clave_admin,
-            premios=premios,
-            fecha_rifa=str(fecha_rifa) if fecha_rifa else None,
-            bienvenida=bienvenida
-        )
+        datos_config = {
+            "n": n_final,
+            "p": int(p),
+            "t": int(t),
+            "clave_vendedor": clave_vendedor,
+            "clave_admin": clave_admin,
+            "premios": premios,
+            "fecha_rifa": str(fecha_rifa) if fecha_rifa else None,
+            "bienvenida": bienvenida
+        }
 
         if n_final < n_actual:
-            db.reiniciar_numeros_rifa(n_final)
-            insertados = n_final
+            st.session_state["config_pendiente"] = datos_config
+            st.session_state["confirmar_reduccion_n"] = True
+            st.rerun()
+
         else:
+            db.guardar_configuracion(**datos_config)
+
             insertados = db.asegurar_numeros_hasta_n(n_final)
 
-        if insertados > 0:
-            st.session_state["mensaje_configuracion"] = f"Configuración guardada. Se agregaron {insertados} números nuevos."
-        else:
-            st.session_state["mensaje_configuracion"] = "Configuración guardada correctamente."
+            if insertados > 0:
+                st.session_state["mensaje_configuracion"] = (
+                    f"Configuración guardada. Se agregaron {insertados} números nuevos."
+                )
+            else:
+                st.session_state["mensaje_configuracion"] = (
+                    "Configuración guardada correctamente."
+                )
 
-        st.rerun()
+            st.rerun()
+
+    if st.session_state["confirmar_reduccion_n"]:
+
+        @st.dialog("Confirmar reducción de números")
+        def confirmar_reduccion_n():
+
+            datos = st.session_state["config_pendiente"]
+            n_actual = int(config["n"])
+            n_final = int(datos["n"])
+
+            st.warning(
+                f"⚠️ Estás reduciendo la cantidad de números de la rifa "
+                f"desde {n_actual} a {n_final}.\n\n"
+                "Esto reiniciará los números de la rifa y se perderán "
+                "las reservas, compras y estados actuales asociados."
+            )
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("Cancelar", width="stretch"):
+                    st.session_state["confirmar_reduccion_n"] = False
+                    st.session_state["config_pendiente"] = None
+                    st.rerun()
+
+            with col2:
+                if st.button("Sí, reducir números", type="primary", width="stretch"):
+                    db.guardar_configuracion(**datos)
+                    db.reiniciar_numeros_rifa(n_final)
+
+                    st.session_state["confirmar_reduccion_n"] = False
+                    st.session_state["config_pendiente"] = None
+                    st.session_state["mensaje_configuracion"] = (
+                        f"Configuración guardada. La rifa fue reiniciada con {n_final} números."
+                    )
+
+                    st.rerun()
+
+        confirmar_reduccion_n()   
+
+    if "mensaje_configuracion" in st.session_state:
+        st.success(st.session_state["mensaje_configuracion"])
+        del st.session_state["mensaje_configuracion"]
 
     st.divider()
     st.subheader("Reiniciar rifa")
