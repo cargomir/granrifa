@@ -236,86 +236,31 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    # ── HTML navbar unificado (desktop + mobile) ──────────────────
-    st.markdown(f"""
-        <style>
-        /* Ocultar el header por defecto de Streamlit */
-        header[data-testid="stHeader"] {{ display: none; }}
+    col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
-        .navbar {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background: #ffffff;
-            border-bottom: 2px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }}
+    with col_logo:
+        st.image("logo.png", width=200)
 
-        .navbar-left {{
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }}
+    with col_titulo:
+        st.markdown(
+            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+            unsafe_allow_html=True
+        )
 
-        .navbar-logo {{
-            height: 48px;
-            width: auto;
-        }}
+    with col_boton:
+        st.markdown(
+            """
+            <div style='height:80px;'></div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        .navbar-titulo {{
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #111827;
-            margin: 0;
-            line-height: 1.2;
-        }}
-
-        /* ── MOBILE ── */
-        @media (max-width: 767px) {{
-            .navbar {{
-                padding: 8px 12px;
-            }}
-            .navbar-logo {{
-                height: 36px;
-            }}
-            .navbar-titulo {{
-                font-size: 0.95rem;
-            }}
-        }}
-        </style>
-
-        <div class="navbar">
-            <div class="navbar-left">
-                <img src="logo.png" class="navbar-logo" alt="Logo">
-                <span class="navbar-titulo">{titulo}</span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # ── Botón real de Streamlit (funciona el callback) ────────────
-    # Se posiciona flotante arriba a la derecha via CSS
-    st.markdown("""
-        <style>
-        /* Apunta al primer botón del main y lo flota */
-        section[data-testid="stMain"] > div > div > div:first-child
-            div[data-testid="stButton"] > button {{
-            position: fixed;
-            top: 10px;
-            right: 16px;
-            z-index: 1000;
-            padding: 6px 14px;
-            font-size: 0.82rem;
-            border-radius: 8px;
-        }}
-        </style>
-    """, unsafe_allow_html=True)
-
-    if st.button("Cerrar sesión", type="primary"):
-        cerrar_sesion()
+        if st.button(
+            "Cerrar sesión",
+            type="primary",
+            width="stretch"
+        ):
+            cerrar_sesion()
 
 def main():
     inicializar_estado()
