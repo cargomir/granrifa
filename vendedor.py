@@ -454,28 +454,89 @@ def render_vendedor():
     )
 
     if ventas_alumno:
+
         st.divider()
         st.subheader("Ventas realizadas por este alumno")
 
         total_ventas = len(ventas_alumno)
 
+        filas = []
+
         for i, compra in enumerate(ventas_alumno, start=1):
 
             numero_venta = total_ventas - i + 1
 
-            st.markdown(f"### Venta {numero_venta}")
-
-            st.write(f"**Fecha:** {compra['fecha_hora_compra']}")
-            st.write(f"**Comprador:** {compra['comprador']}")
-            st.write(f"**Pagado:** {compra['pagado']}")
-            st.write(f"**Forma de pago:** {compra['forma_pago']}")
-            st.write(f"**Cantidad de números:** {compra['cantidad']}")
-            st.write(
-                f"**Total:** ${compra['total']:,.0f}".replace(",", ".")
+            estado = (
+                "🟥 Pagado"
+                if compra["pagado"] == "Sí"
+                else "🟨 Pendiente"
             )
-            st.write(f"**Números:** {compra['numeros']}")
 
-            if compra["pagado"] != "Sí":
-                mostrar_contador_expiracion(compra["id_compra"])
+            filas.append({
+                "N° venta": numero_venta,
+                "ID compra": compra["id_compra"],
+                "Fecha y hora": compra["fecha_hora_compra"],
+                "Comprador": compra["comprador"],
+                "Estado": estado,
+                "Números": compra["numeros"]
+            })
 
-            _mostrar_reservados(compra["id_compra"])
+        df_ventas = pd.DataFrame(filas)
+
+        html_tabla = """
+        <style>
+        .tabla-ventas {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 15px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tabla-ventas th {
+            background-color: #f3f4f6;
+            font-weight: 700;
+            text-align: center;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tabla-ventas td {
+            text-align: center;
+            padding: 11px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tabla-ventas tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .tabla-ventas tr:hover {
+            background-color: #f1f5f9;
+        }
+        </style>
+
+        <table class="tabla-ventas">
+            <thead>
+                <tr>
+        """
+
+        for col in df_ventas.columns:
+            html_tabla += f"<th>{col}</th>"
+
+        html_tabla += "</tr></thead><tbody>"
+
+        for _, row in df_ventas.iterrows():
+
+            html_tabla += "<tr>"
+
+            for col in df_ventas.columns:
+                html_tabla += f"<td>{row[col]}</td>"
+
+            html_tabla += "</tr>"
+
+        html_tabla += "</tbody></table>"
+
+        components.html(html_tabla, height=350, scrolling=True)
