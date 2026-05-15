@@ -527,7 +527,7 @@ def render_administracion():
         st.session_state["confirmar_reset_rifa"] = False
 
     if st.button(
-        "🗑️ Reiniciar compras y números",
+        "🗑️ Reiniciar rifa",
         type="secondary"
     ):
         st.session_state["confirmar_reset_rifa"] = True
