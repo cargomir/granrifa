@@ -45,6 +45,8 @@ def login():
 
         with logo2:
             st.image("logo.png", width=350)
+        
+        config = db.obtener_configuracion()
 
         st.markdown(
             f"""
@@ -60,8 +62,6 @@ def login():
             """,
             unsafe_allow_html=True
         )
-
-        config = db.obtener_configuracion()
 
         premios = config.get("premios")
         fecha_rifa = config.get("fecha_rifa")
