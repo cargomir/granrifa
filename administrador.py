@@ -637,7 +637,7 @@ def render_tirar_rifa():
             </div>
             """
 
-            components.html(html_nombre_ganador, height=250)
+            components.html(html_nombre_ganador, height=350)
 
         else:
             html_numero_al_agua = """
