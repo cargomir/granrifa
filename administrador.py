@@ -371,7 +371,8 @@ def render_resumen():
     r2.metric("Monto recaudado por transferencia", f"${rec['transferencia']:,.0f}".replace(",", "."))
     r3.metric("Monto total recaudado", f"${rec['total']:,.0f}".replace(",", "."))
 
-
+    render_dashboard_visual()
+    
 def render_administracion():
     st.subheader("Configuración de la rifa")
 
