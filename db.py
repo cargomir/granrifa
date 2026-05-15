@@ -295,6 +295,8 @@ def reiniciar_rifa():
             "estado": "disponible",
             "id_compra": None,
             "id_comprador": None,
+            "precio_unitario": None,
+            "fecha_hora_reserva": None,
             "precio_unitario": None
         }) \
         .gte("numero", 1) \

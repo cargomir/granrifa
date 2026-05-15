@@ -465,6 +465,10 @@ def render_administracion():
 
     st.divider()
     st.subheader("Reiniciar rifa")
+    
+    if "mensaje_reset_rifa" in st.session_state:
+        st.success(st.session_state["mensaje_reset_rifa"])
+        del st.session_state["mensaje_reset_rifa"]
 
     st.warning(
         "⚠️ Esta acción eliminará todas las compras y reiniciará todos los números de la rifa."
@@ -506,8 +510,7 @@ def render_administracion():
                     db.reiniciar_rifa()
 
                     st.session_state["confirmar_reset_rifa"] = False
-
-                    st.success("La rifa fue reiniciada correctamente.")
+                    st.session_state["mensaje_reset_rifa"] = "La rifa fue reiniciada correctamente."
 
                     st.rerun()
 
