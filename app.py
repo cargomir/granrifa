@@ -6,7 +6,7 @@ from administrador import render_administrador
 
 
 st.set_page_config(
-    page_title="Gestión de Rifa",
+    page_title="La Gran Rifa",
     page_icon="🎟️",
     layout="wide"
 )

@@ -394,15 +394,6 @@ def render_vendedor():
         or not telefono_numero.strip()
     )
 
-    with col_centro:
-        if st.button(
-            "Finalizar compra",
-            type="primary",
-            disabled=formulario_incompleto,
-            width=250
-        ):
-            reservar()
-
     if not pagado_alumno:
 
         horas = t_actual // 60
@@ -429,6 +420,26 @@ def render_vendedor():
     - **Nº de cuenta:** 1097008263
     """
         )
+
+        with col_centro:
+            if st.button(
+                "Finalizar compra",
+                type="primary",
+                disabled=formulario_incompleto,
+                width=250
+            ):
+                reservar()
+
+    else:
+
+        with col_centro:
+            if st.button(
+                "Finalizar compra",
+                type="primary",
+                disabled=formulario_incompleto,
+                width=250
+            ):
+                reservar()
 
     ventas_alumno = db.compras_por_alumno(
         st.session_state.nombre_vendedor_activo
