@@ -239,25 +239,13 @@ def barra_superior():
     col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
         st.image("logo.png", width=200)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with col_titulo:
         st.markdown(
-            f"""
-            <style>
-            @media (max-width: 768px) {{
-                .titulo-responsive {{
-                    margin-top: 10px !important;
-                    text-align: center !important;
-                    font-size: 34px !important;
-                }}
-            }}
-            </style>
-
-            <h1 class="titulo-responsive" style='margin-top:50px;'>
-                {titulo}
-            </h1>
-            """,
+            f"<h1 style='margin-top:50px; text-align:center;'>{titulo}</h1>",
             unsafe_allow_html=True
         )
 
@@ -269,12 +257,15 @@ def barra_superior():
             unsafe_allow_html=True
         )
 
-        if st.button(
-            "Cerrar sesión",
-            type="primary",
-            width="stretch"
-        ):
-            cerrar_sesion()
+        b1, b2, b3 = st.columns([1, 4, 1])
+
+        with b2:
+            if st.button(
+                "Cerrar sesión",
+                type="primary",
+                width="stretch"
+            ):
+                cerrar_sesion()
 
 def main():
     inicializar_estado()
