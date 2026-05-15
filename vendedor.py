@@ -394,6 +394,8 @@ def render_vendedor():
         or not telefono_numero.strip()
     )
 
+    col_izq, col_centro, col_der = st.columns([1, 1, 1])
+    
     if not pagado_alumno:
 
         horas = t_actual // 60
