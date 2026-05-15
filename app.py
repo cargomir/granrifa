@@ -236,6 +236,30 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
+    st.markdown(
+        """
+        <style>
+        @media (max-width: 768px) {
+            div[data-testid="stHorizontalBlock"] {
+                gap: 0rem !important;
+            }
+
+            .titulo-barra h1 {
+                text-align: center !important;
+                font-size: 38px !important;
+                margin-top: 10px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .espacio-boton {
+                height: 8px !important;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
@@ -243,14 +267,18 @@ def barra_superior():
 
     with col_titulo:
         st.markdown(
-            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+            f"""
+            <div class="titulo-barra">
+                <h1 style='margin-top:50px;'>{titulo}</h1>
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
     with col_boton:
         st.markdown(
             """
-            <div style='height:80px;'></div>
+            <div class='espacio-boton' style='height:80px;'></div>
             """,
             unsafe_allow_html=True
         )
