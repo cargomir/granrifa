@@ -4,29 +4,6 @@ import pandas as pd
 import db
 from streamlit_autorefresh import st_autorefresh
 
-def mostrar_contador_expiracion(id_compra: str):
-    tiempo = db.tiempo_restante_compra(id_compra)
-
-    if not tiempo["tiene_reservas"]:
-        return
-
-    if tiempo["segundos_restantes"] <= 0:
-        st.warning("Las reservas de esta compra ya expiraron o están por liberarse.")
-        return
-
-    segundos = int(tiempo["segundos_restantes"])
-
-    horas = segundos // 3600
-    minutos = (segundos % 3600) // 60
-    segundos_final = segundos % 60
-
-    texto_tiempo = f"{horas:02}:{minutos:02}:{segundos_final:02}"
-
-    st.info(
-        f"⏳ Tiempo restante para confirmar el pago de esta compra: "
-        f"**{texto_tiempo}**"
-    )
-
 def _limpiar_formulario_numero():
     for k in [
         "numeros_seleccionados",
