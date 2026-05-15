@@ -115,17 +115,7 @@ def _mostrar_reservados(id_compra: str):
 
 
 def render_vendedor():
-    col_logo, col_titulo = st.columns([1, 8])
-
-    with col_logo:
-        st.image("logo.png", width=150)
-
-    with col_titulo:
-        st.markdown(
-            "<h1 style='margin-top:10px;'>Perfil vendedor</h1>",
-            unsafe_allow_html=True
-        )
-
+    
     st_autorefresh(interval=90000, key="refresh_vendedor")
 
     config = db.obtener_configuracion()

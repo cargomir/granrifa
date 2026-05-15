@@ -191,17 +191,6 @@ def mostrar_grilla_numeros():
 def render_administrador():
 
     st_autorefresh(interval=90000, key="refresh_admin")
-    
-    col_logo, col_titulo = st.columns([1, 8])
-
-    with col_logo:
-        st.image("logo.png", width=150)
-
-    with col_titulo:
-        st.markdown(
-            "<h1 style='margin-top:10px;'>Perfil administrador</h1>",
-            unsafe_allow_html=True
-        )
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Gestión de compras",
