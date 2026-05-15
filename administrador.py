@@ -226,7 +226,14 @@ def render_gestion_compras():
                 col1.caption(compra["id_compra"])
                 col2.metric("Cantidad", compra["cantidad"])
                 col3.metric("Total a pagar", f"${compra['total']:,.0f}".replace(",", "."))
-                col4.metric("Minutos restantes", compra["tiempo_restante_min"])
+                min_restantes = int(compra["tiempo_restante_min"])
+
+                horas = min_restantes // 60
+                minutos = min_restantes % 60
+
+                texto_tiempo = f"{horas:02}:{minutos:02}:00"
+
+                col4.metric("Tiempo restante", texto_tiempo)
 
                 st.write(f"**Vendedor:** {compra['nombre_alumno_vendedor']}")
                 st.write(f"**Fecha compra:** {compra['fecha_hora_compra']}")
