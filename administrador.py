@@ -15,14 +15,6 @@ def dataframe_a_excel(df: pd.DataFrame):
 
     return output.getvalue()
 
-def dataframe_a_excel(df: pd.DataFrame):
-    output = BytesIO()
-
-    with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False, sheet_name="numeros")
-
-    return output.getvalue()
-
 def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
     html = """
     <style>
@@ -267,15 +259,7 @@ def render_gestion_compras():
             st.info("Aún no hay compras pagadas.")
         else:
             df = pd.DataFrame(pagadas)
-            columnas = [
-                "id_compra",
-                "fecha_hora_compra",
-                "nombre_alumno_vendedor",
-                "forma_pago",
-                "cantidad",
-                "total",
-                "numeros"
-            ]
+            
             df = df.rename(columns={
                 "id_compra": "ID compra",
                 "fecha_hora_compra": "Fecha compra",

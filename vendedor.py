@@ -163,8 +163,6 @@ def render_vendedor():
         st.session_state.id_compra_activa = None
     if "nombre_vendedor_activo" not in st.session_state:
         st.session_state.nombre_vendedor_activo = None
-    if "compras_cerradas_sesion" not in st.session_state:
-        st.session_state.compras_cerradas_sesion = []
     
     st.info(f"Vendedor activo: **{st.session_state.nombre_vendedor_activo}**")
 
@@ -296,7 +294,7 @@ def render_vendedor():
     telefono = f"+56{telefono_numero.strip()}"
         
     correo = st.text_input(
-        "Correo",
+        "Correo (opcional)",
         key="correo_input",
         placeholder="Ej: pato_achurra@mail.com"
     )
@@ -394,13 +392,6 @@ def render_vendedor():
         if errores and not exitos:
             return
 
-        id_compra_cerrada = id_compra_actual
-
-        if id_compra_cerrada not in st.session_state.compras_cerradas_sesion:
-            st.session_state.compras_cerradas_sesion = (
-                st.session_state.compras_cerradas_sesion + [id_compra_cerrada]
-            )
-
         _limpiar_formulario_numero()
         st.session_state.id_compra_activa = None
 
@@ -410,7 +401,6 @@ def render_vendedor():
         not numeros_seleccionados
         or not nombre_actual.strip()
         or not telefono_numero.strip()
-        or not correo.strip()
     )
 
     with col_centro:
