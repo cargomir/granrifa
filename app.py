@@ -236,10 +236,10 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    col_logo, col_titulo, col_boton = st.columns([1, 4, 1])
+    col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
-        st.image("logo.png", width=150)
+        st.image("logo.png", width=200)
 
     with col_titulo:
         st.markdown(
