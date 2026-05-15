@@ -31,7 +31,7 @@ def _limpiar_formulario_numero():
     for k in [
         "numeros_seleccionados",
         "nombre_comprador_input",
-        "telefono_input",
+        "telefono_numero_input",
         "correo_input",
         "comprador_buscado",
         "pagado_alumno"
@@ -39,10 +39,6 @@ def _limpiar_formulario_numero():
         st.session_state.pop(k, None)
 
     st.session_state["pagado_alumno"] = True
-    
-    st.session_state["telefono_key_version"] = (
-            st.session_state.get("telefono_key_version", 0) + 1
-    )
 
 def _mostrar_reservados(id_compra: str):
     if not id_compra:
@@ -242,12 +238,12 @@ def render_vendedor():
     st.subheader("Paso 2 — Datos del comprador")
 
     st.session_state.setdefault("nombre_comprador_input", "")
-    st.session_state.setdefault("telefono_input", "")
+    st.session_state.setdefault("telefono_numero_input", "")
     st.session_state.setdefault("correo_input", "")
     st.session_state.setdefault("comprador_buscado", "")
 
     nombre_actual = st.text_input(
-        "Nombre comprador",
+        "Nombre comprador (obligatorio)",
         key="nombre_comprador_input",
         placeholder="Ej: Patricio Achurra"
     )
@@ -264,10 +260,7 @@ def render_vendedor():
             else:
                 telefono_visible = telefono_completo
 
-            st.session_state["telefono_input"] = telefono_completo
-            st.session_state[
-                f"telefono_input_visible_{st.session_state.get('telefono_key_version', 0)}"
-            ] = telefono_visible
+            st.session_state["telefono_numero_input"] = telefono_visible
             st.session_state["correo_input"] = comprador.get("correo") or ""
 
             st.toast("Datos del comprador encontrados y autocompletados.")
@@ -282,12 +275,10 @@ def render_vendedor():
             disabled=True
         )
 
-    st.session_state.setdefault("telefono_key_version", 0)
-
     with col_numero:
         telefono_numero = st.text_input(
-            "Teléfono",
-            key=f"telefono_input_visible_{st.session_state.telefono_key_version}",
+            "Teléfono (obligatorio)",
+            key="telefono_numero_input",
             placeholder="Ej: 987654321"
         )
 
