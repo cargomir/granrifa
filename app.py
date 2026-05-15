@@ -3,7 +3,6 @@ import pandas as pd
 import db
 from vendedor import render_vendedor
 from administrador import render_administrador
-from streamlit_javascript import st_javascript
 
 
 st.set_page_config(
@@ -237,86 +236,31 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    width = st_javascript("window.innerWidth")
+    col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
-    if width is None:
-        width = 1200
+    with col_logo:
+        st.image("logo.png", width=200)
 
-    is_mobile = width < 700
+    with col_titulo:
+        st.markdown(
+            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+            unsafe_allow_html=True
+        )
 
-    if is_mobile:
-
+    with col_boton:
         st.markdown(
             """
-            <style>
-            section.main > div {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-            </style>
+            <div style='height:80px;'></div>
             """,
             unsafe_allow_html=True
         )
 
-        c1, c2, c3 = st.columns([1, 2, 1])
-
-        with c2:
-            st.image("logo.png", width=160)
-
-        st.markdown(
-            f"""
-            <h1 style="
-                text-align:center;
-                margin-top:0px;
-                margin-bottom:14px;
-                font-size:36px;
-                line-height:1.1;
-            ">
-                {titulo}
-            </h1>
-            """,
-            unsafe_allow_html=True
-        )
-
-        b1, b2, b3 = st.columns([1, 3, 1])
-
-        with b2:
-            if st.button(
-                "Cerrar sesión",
-                type="primary",
-                width="stretch",
-                key="cerrar_mobile"
-            ):
-                cerrar_sesion()
-
-    else:
-
-        col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
-
-        with col_logo:
-            st.image("logo.png", width=200)
-
-        with col_titulo:
-            st.markdown(
-                f"<h1 style='margin-top:50px;'>{titulo}</h1>",
-                unsafe_allow_html=True
-            )
-
-        with col_boton:
-            st.markdown(
-                """
-                <div style='height:80px;'></div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            if st.button(
-                "Cerrar sesión",
-                type="primary",
-                width="stretch",
-                key="cerrar_desktop"
-            ):
-                cerrar_sesion()
+        if st.button(
+            "Cerrar sesión",
+            type="primary",
+            width="stretch"
+        ):
+            cerrar_sesion()
 
 def main():
     inicializar_estado()
