@@ -236,59 +236,27 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    st.markdown(
-        """
-        <style>
-        @media (max-width: 768px) {
-            .barra-logo {
-                text-align: center !important;
-            }
-
-            .barra-logo img {
-                display: block !important;
-                margin-left: auto !important;
-                margin-right: auto !important;
-            }
-
-            .barra-titulo h1 {
-                text-align: center !important;
-                margin-top: 10px !important;
-                font-size: 38px !important;
-            }
-
-            .barra-boton {
-                text-align: center !important;
-            }
-
-            .barra-boton .stButton button {
-                display: block !important;
-                margin-left: auto !important;
-                margin-right: auto !important;
-                width: 85% !important;
-            }
-
-            .espacio-boton {
-                height: 10px !important;
-            }
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
     col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
-        st.markdown('<div class="barra-logo">', unsafe_allow_html=True)
         st.image("logo.png", width=200)
-        st.markdown('</div>', unsafe_allow_html=True)
 
     with col_titulo:
         st.markdown(
             f"""
-            <div class="barra-titulo">
-                <h1 style='margin-top:50px;'>{titulo}</h1>
-            </div>
+            <style>
+            @media (max-width: 768px) {{
+                .titulo-responsive {{
+                    margin-top: 10px !important;
+                    text-align: center !important;
+                    font-size: 34px !important;
+                }}
+            }}
+            </style>
+
+            <h1 class="titulo-responsive" style='margin-top:50px;'>
+                {titulo}
+            </h1>
             """,
             unsafe_allow_html=True
         )
@@ -296,8 +264,7 @@ def barra_superior():
     with col_boton:
         st.markdown(
             """
-            <div class='espacio-boton' style='height:80px;'></div>
-            <div class="barra-boton">
+            <div style='height:80px;'></div>
             """,
             unsafe_allow_html=True
         )
@@ -308,8 +275,6 @@ def barra_superior():
             width="stretch"
         ):
             cerrar_sesion()
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
 def main():
     inicializar_estado()
