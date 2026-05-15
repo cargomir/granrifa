@@ -3,8 +3,6 @@ import pandas as pd
 import db
 from vendedor import render_vendedor
 from administrador import render_administrador
-import base64
-from pathlib import Path
 
 
 st.set_page_config(
@@ -231,14 +229,6 @@ def login():
             else:
                 st.error("Contraseña incorrecta.")
 
-def get_imagen_base64(ruta: str) -> str:
-    """Convierte una imagen local a string base64 para usar en HTML."""
-    with open(ruta, "rb") as f:
-        data = f.read()
-    ext = Path(ruta).suffix.lstrip(".")  # png, jpg, etc.
-    return f"data:image/{ext};base64,{base64.b64encode(data).decode()}"
-
-
 def barra_superior():
 
     if st.session_state.perfil == "vendedor":
@@ -246,72 +236,31 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    logo_b64 = get_imagen_base64("logo.png")   # ← convierte el logo
+    col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
-    st.markdown(f"""
-        <style>
-        header[data-testid="stHeader"] {{ display: none; }}
+    with col_logo:
+        st.image("logo.png", width=200)
 
-        .navbar {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background: #ffffff;
-            border-bottom: 2px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }}
+    with col_titulo:
+        st.markdown(
+            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+            unsafe_allow_html=True
+        )
 
-        .navbar-left {{
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }}
+    with col_boton:
+        st.markdown(
+            """
+            <div style='height:80px;'></div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        .navbar-logo {{
-            height: 48px;
-            width: auto;
-        }}
-
-        .navbar-titulo {{
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #111827;
-            margin: 0;
-        }}
-
-        @media (max-width: 767px) {{
-            .navbar {{ padding: 8px 12px; }}
-            .navbar-logo {{ height: 36px; }}
-            .navbar-titulo {{ font-size: 0.95rem; }}
-        }}
-
-        /* Botón cerrar sesión flotante */
-        section[data-testid="stMain"] > div > div > div:first-child
-            div[data-testid="stButton"] > button {{
-            position: fixed;
-            top: 10px;
-            right: 16px;
-            z-index: 1000;
-            padding: 6px 14px;
-            font-size: 0.82rem;
-            border-radius: 8px;
-        }}
-        </style>
-
-        <div class="navbar">
-            <div class="navbar-left">
-                <img src="{logo_b64}" class="navbar-logo" alt="Logo">
-                <span class="navbar-titulo">{titulo}</span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    if st.button("Cerrar sesión", type="primary"):
-        cerrar_sesion()
+        if st.button(
+            "Cerrar sesión",
+            type="primary",
+            width="stretch"
+        ):
+            cerrar_sesion()
 
 def main():
     inicializar_estado()
