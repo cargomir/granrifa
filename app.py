@@ -231,10 +231,30 @@ def login():
 
 def barra_superior():
 
-    col_vacia, col_boton = st.columns([8, 1])
+    if st.session_state.perfil == "vendedor":
+        titulo = "Perfil vendedor"
+    else:
+        titulo = "Perfil administrador"
+
+    col_logo, col_titulo, col_boton = st.columns([1, 7, 1])
+
+    with col_logo:
+        st.image("logo.png", width=150)
+
+    with col_titulo:
+        st.markdown(
+            f"<h1 style='margin-top:10px;'>{titulo}</h1>",
+            unsafe_allow_html=True
+        )
 
     with col_boton:
-        if st.button("Cerrar sesión", type="primary", width="stretch"):
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        if st.button(
+            "Cerrar sesión",
+            type="primary",
+            width="stretch"
+        ):
             cerrar_sesion()
 
 def main():
