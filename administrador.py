@@ -81,7 +81,7 @@ def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
 def mostrar_grilla_numeros():
     st.subheader("Estado general de números")
 
-    numeros = db.listar_estado_numeros()
+    numeros = db.exportar_todos_los_numeros()
 
     if not numeros:
         st.info("No hay números cargados.")
@@ -157,7 +157,17 @@ def mostrar_grilla_numeros():
     for item in numeros:
         numero = item["numero"]
         estado = item["estado"]
-        html += f'<div class="numero-rifa {estado}">{numero}</div>'
+
+        vendedor = item.get("vendedor") or "Sin vendedor"
+        comprador = item.get("comprador") or "Sin comprador"
+
+        tooltip = f"Vendedor: {vendedor} | Comprador: {comprador}"
+
+        html += (
+            f'<div class="numero-rifa {estado}" title="{tooltip}">'
+            f'{numero}'
+            f'</div>'
+        )
 
     html += '</div>'
 
