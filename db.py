@@ -259,7 +259,8 @@ def reiniciar_numeros_rifa(n):
         {
             "numero": i,
             "estado": "disponible",
-            "id_compra": None
+            "id_compra": None,
+            "fecha_hora_reserva": None
         }
         for i in range(1, int(n) + 1)
     ]
