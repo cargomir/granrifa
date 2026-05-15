@@ -246,7 +246,7 @@ def render_gestion_compras():
                 horas = min_restantes // 60
                 minutos = min_restantes % 60
 
-                texto_tiempo = f"{horas:02}h {minutos:02}m"
+                texto_tiempo = f"{horas:02} h {minutos:02} min"
 
                 col4.metric("Tiempo restante", texto_tiempo)
 
