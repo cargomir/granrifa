@@ -55,7 +55,7 @@ def login():
                 font-size: 30px;
                 margin-bottom: 6px;
             '>
-            Bienvenido a la gran rifa del 8° A del Colegio Gabriela Mistral
+            {config.get("bienvenida", "Bienvenido a la gran rifa")}
             </p>
             """,
             unsafe_allow_html=True

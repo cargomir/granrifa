@@ -43,7 +43,16 @@ def obtener_configuracion() -> Dict[str, Any]:
     return _data(resp)
 
 
-def guardar_configuracion(n: int, p: float, t: int, clave_vendedor: str, clave_admin: str, premios=None, fecha_rifa=None) -> None:
+def guardar_configuracion(
+    n: int,
+    p: float,
+    t: int,
+    clave_vendedor: str,
+    clave_admin: str,
+    premios=None,
+    fecha_rifa=None,
+    bienvenida=None
+) -> None:
     supabase.table("configuracion").update({
         "n": n,
         "p": p,
@@ -52,6 +61,7 @@ def guardar_configuracion(n: int, p: float, t: int, clave_vendedor: str, clave_a
         "clave_admin": clave_admin,
         "premios":premios,
         "fecha_rifa":str(fecha_rifa) if fecha_rifa else None,
+        "bienvenida": bienvenida,
     }).eq("id", 1).execute()
 
 

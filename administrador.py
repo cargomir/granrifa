@@ -398,6 +398,12 @@ def render_administracion():
             value=max(1, int(config["t"]) // 60)
         )
 
+        bienvenida = st.text_area(
+            "Texto de bienvenida",
+            value=config.get("bienvenida", ""),
+            placeholder="Ej: Bienvenido a la gran rifa..."
+        )
+
         premios = st.text_area(
             "Premios principales",
             value=config.get("premios", ""),
@@ -432,7 +438,8 @@ def render_administracion():
             clave_vendedor=clave_vendedor,
             clave_admin=clave_admin,
             premios=premios,
-            fecha_rifa=str(fecha_rifa) if fecha_rifa else None
+            fecha_rifa=str(fecha_rifa) if fecha_rifa else None,
+            bienvenida=bienvenida
         )
 
         if n_final < n_actual:
