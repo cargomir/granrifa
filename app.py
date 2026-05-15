@@ -236,77 +236,6 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    st.markdown(
-        """
-        <style>
-        @media (max-width: 768px) {
-
-            .desktop-barra {
-                display: none;
-            }
-
-            .mobile-barra {
-                display: block;
-                text-align: center;
-            }
-
-            .mobile-barra h1 {
-                margin-top: 10px !important;
-                margin-bottom: 20px !important;
-                font-size: 38px !important;
-            }
-        }
-
-        @media (min-width: 769px) {
-
-            .mobile-barra {
-                display: none;
-            }
-
-            .desktop-barra {
-                display: block;
-            }
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # -------------------------
-    # VERSIÓN MOBILE
-    # -------------------------
-
-    st.markdown('<div class="mobile-barra">', unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns([1,2,1])
-
-    with col2:
-        st.image("logo.png", width=180)
-
-    st.markdown(
-        f"<h1>{titulo}</h1>",
-        unsafe_allow_html=True
-    )
-
-    col1, col2, col3 = st.columns([1,3,1])
-
-    with col2:
-        if st.button(
-            "Cerrar sesión",
-            key="cerrar_mobile",
-            type="primary",
-            width="stretch"
-        ):
-            cerrar_sesion()
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # -------------------------
-    # VERSIÓN DESKTOP
-    # -------------------------
-
-    st.markdown('<div class="desktop-barra">', unsafe_allow_html=True)
-
     col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
@@ -328,13 +257,10 @@ def barra_superior():
 
         if st.button(
             "Cerrar sesión",
-            key="cerrar_desktop",
             type="primary",
             width="stretch"
         ):
             cerrar_sesion()
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
 def main():
     inicializar_estado()
