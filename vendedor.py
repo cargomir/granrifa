@@ -141,7 +141,7 @@ def render_vendedor():
     col_logo, col_titulo = st.columns([1, 8])
 
     with col_logo:
-        st.image("logo.png", width=120)
+        st.image("logo.png", width=200)
 
     with col_titulo:
         st.markdown(
