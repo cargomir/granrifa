@@ -47,7 +47,7 @@ def login():
             st.image("logo.png", width=350)
 
         st.markdown(
-            """
+            f"""
             <p style='
                 text-align: center;
                 font-weight: bold;
