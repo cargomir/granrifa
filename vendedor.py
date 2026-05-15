@@ -187,7 +187,7 @@ def render_vendedor():
         font-weight:700;
         margin-bottom:16px;
     ">
-    A continuación se muestran los números disponibles. Pincha todos los números que deseas comprar.
+    A continuación se muestran los números disponibles. Pincha todos los números a comprar.
     </div>
     """, unsafe_allow_html=True)
 
@@ -243,7 +243,7 @@ def render_vendedor():
             st.toast("Datos del comprador encontrados y autocompletados.")
             st.rerun()
 
-    col_prefijo, col_numero = st.columns([1, 5])
+    col_prefijo, col_numero = st.columns([1, 8])
 
     with col_prefijo:
         st.text_input(
@@ -268,7 +268,7 @@ def render_vendedor():
     )
 
     pagado_alumno = st.checkbox(
-        f"El valor de los números será pagado directamente a **{st.session_state.nombre_vendedor_activo}**",
+        f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**",
         value=True,
         key="pagado_alumno"
     )
