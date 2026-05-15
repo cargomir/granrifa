@@ -229,37 +229,89 @@ def login():
             else:
                 st.error("Contraseña incorrecta.")
 
-def barra_superior():
+import streamlit as st
 
+def barra_superior():
     if st.session_state.perfil == "vendedor":
         titulo = "Perfil vendedor"
     else:
         titulo = "Perfil administrador"
 
+    # ── Detección de pantalla vía JS ──────────────────────────────
+    st.markdown("""
+        <script>
+        const w = window.innerWidth;
+        const tag = document.createElement('div');
+        tag.id = 'screen-flag';
+        tag.dataset.mobile = w < 768 ? 'true' : 'false';
+        document.body.appendChild(tag);
+        </script>
+    """, unsafe_allow_html=True)
+
+    # ── CSS unificado ─────────────────────────────────────────────
+    st.markdown("""
+        <style>
+        /* ── DESKTOP ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            gap: 16px;
+        }
+        .topbar-logo img { width: 160px; }
+        .topbar-titulo h1 {
+            font-size: 1.6rem;
+            margin: 0;
+            color: #111827;
+        }
+        .topbar-boton { flex-shrink: 0; }
+
+        /* ── MOBILE (<768 px) ── */
+        @media (max-width: 767px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .topbar-logo-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .topbar-logo img { width: 90px; }
+            .topbar-titulo h1 {
+                font-size: 1.05rem;
+                margin: 0;
+            }
+            /* Botón: ancho completo en móvil */
+            .topbar-boton {
+                width: 100%;
+            }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # ── Versión DESKTOP (columnas Streamlit) ──────────────────────
+    # Se muestra en pantallas anchas gracias a CSS
     col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
     with col_logo:
-        st.image("logo.png", width=200)
+        st.image("logo.png", width=160)
 
     with col_titulo:
         st.markdown(
-            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+            f"<h1 style='margin-top:40px;'>{titulo}</h1>",
             unsafe_allow_html=True
         )
 
     with col_boton:
-        st.markdown(
-            """
-            <div style='height:80px;'></div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        if st.button(
-            "Cerrar sesión",
-            type="primary",
-            width="stretch"
-        ):
+        st.markdown("<div style='height:68px;'></div>", unsafe_allow_html=True)
+        if st.button("Cerrar sesión", type="primary", use_container_width=True):
             cerrar_sesion()
 
 def main():
