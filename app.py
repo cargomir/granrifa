@@ -185,7 +185,7 @@ def login():
 
         nombre_alumno = None
 
-        if perfil == "Alumno":
+        if perfil == "Alumno/Apoderado":
             alumnos = db.listar_alumnos()
 
             if not alumnos:
