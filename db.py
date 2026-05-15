@@ -603,7 +603,19 @@ def compras_pendientes() -> List[Dict[str, Any]]:
 
         resp = (
             supabase.table("numeros")
-            .select("id_compra, precio_unitario, fecha_hora_reserva, compras(id_compra, fecha_hora_compra, nombre_alumno_vendedor, pagado)")
+            .select("""
+                id_compra,
+                numero,
+                precio_unitario,
+                fecha_hora_reserva,
+                compradores(nombre_comprador),
+                compras(
+                    id_compra,
+                    fecha_hora_compra,
+                    nombre_alumno_vendedor,
+                    pagado
+                )
+            """)
             .eq("estado", "reservado")
             .execute()
         )
@@ -633,10 +645,18 @@ def compras_pendientes() -> List[Dict[str, Any]]:
                 "nombre_alumno_vendedor": compra.get("nombre_alumno_vendedor"),
                 "cantidad": 0,
                 "total": 0,
-                "fechas_reserva": []
+                "fechas_reserva": [],
+                "numeros": [],
+                "compradores": set()
             }
 
         grupos[idc]["cantidad"] += 1
+        grupos[idc]["numeros"].append(r.get("numero"))
+        comprador = r.get("compradores") or {}
+        nombre_comprador = comprador.get("nombre_comprador")
+
+        if nombre_comprador:
+            grupos[idc]["compradores"].add(nombre_comprador)
         grupos[idc]["total"] += float(r.get("precio_unitario") or 0)
         if r.get("fecha_hora_reserva"):
             grupos[idc]["fechas_reserva"].append(r["fecha_hora_reserva"])
@@ -664,6 +684,13 @@ def compras_pendientes() -> List[Dict[str, Any]]:
             restantes = 0
 
         g["tiempo_restante_min"] = restantes
+        g["numeros"] = ", ".join(
+            str(n) for n in sorted(g["numeros"])
+        )
+
+        g["compradores"] = ", ".join(
+            sorted(g["compradores"])
+        )
         resultado.append(g)
 
     return sorted(resultado, key=lambda x: x["fecha_hora_compra"] or "", reverse=True)
