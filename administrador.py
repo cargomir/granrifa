@@ -316,7 +316,6 @@ def render_gestion_compras():
 
 def render_dashboard_visual():
     st.divider()
-    st.subheader("Tablas resumen")
 
     datos = db.dashboard_admin()
     df = pd.DataFrame(datos["numeros"])
@@ -324,22 +323,6 @@ def render_dashboard_visual():
     if df.empty:
         st.info("No hay datos para mostrar.")
         return
-
-    st.markdown("### Números por estado")
-
-    tabla_estado = (
-        df.groupby("estado")
-        .size()
-        .reset_index(name="cantidad")
-        .sort_values("estado")
-    )
-
-    tabla_estado = tabla_estado.rename(columns={
-        "estado": "Estado",
-        "cantidad": "Cantidad"
-    })
-    
-    mostrar_tabla_estilizada(tabla_estado, height=220)
 
     st.markdown("### Números asociados por vendedor")
 
@@ -387,8 +370,6 @@ def render_resumen():
     r1.metric("Monto recaudado en efectivo", f"${rec['efectivo']:,.0f}".replace(",", "."))
     r2.metric("Monto recaudado por transferencia", f"${rec['transferencia']:,.0f}".replace(",", "."))
     r3.metric("Monto total recaudado", f"${rec['total']:,.0f}".replace(",", "."))
-    
-    render_dashboard_visual()
 
 
 def render_administracion():
