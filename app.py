@@ -243,7 +243,7 @@ def barra_superior():
 
     with col_titulo:
         st.markdown(
-            f"<h1 style='margin-top:10px;'>{titulo}</h1>",
+            f"<h1 style='margin-top:25px;'>{titulo}</h1>",
             unsafe_allow_html=True
         )
 
