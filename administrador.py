@@ -190,7 +190,7 @@ def mostrar_grilla_numeros():
 
 def render_administrador():
 
-    st_autorefresh(interval=30000, key="refresh_admin")
+    st_autorefresh(interval=90000, key="refresh_admin")
     
     col_logo, col_titulo = st.columns([1, 8])
 

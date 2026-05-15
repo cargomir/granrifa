@@ -149,7 +149,7 @@ def render_vendedor():
             unsafe_allow_html=True
         )
 
-    st_autorefresh(interval=30000, key="refresh_vendedor")
+    st_autorefresh(interval=90000, key="refresh_vendedor")
 
     config = db.obtener_configuracion()
     p_actual = float(config["p"])
@@ -230,7 +230,7 @@ def render_vendedor():
             f"Total parcial: ${total_estimado:,.0f}".replace(",", ".")
         )
 
-    st.caption("La lista se actualiza automáticamente cada 30 segundos para bloquear números tomados por otros vendedores.")
+    st.caption("La lista se actualiza automáticamente cada 90 segundos para bloquear números tomados por otros vendedores.")
     
     # -----------------------------
     # Paso 2: Datos comprador
