@@ -243,14 +243,14 @@ def barra_superior():
 
     with col_titulo:
         st.markdown(
-            f"<h1 style='margin-top:40px;'>{titulo}</h1>",
+            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
             unsafe_allow_html=True
         )
 
     with col_boton:
         st.markdown(
             """
-            <div style='height:70px;'></div>
+            <div style='height:80px;'></div>
             """,
             unsafe_allow_html=True
         )
