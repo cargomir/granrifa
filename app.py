@@ -206,7 +206,7 @@ def login():
 
         if st.button("Ingresar", type="primary", width="stretch"):
 
-            if perfil == "Alumno":
+            if perfil == "Alumno/Apoderado":
 
                 if nombre_alumno is None:
                     st.error("Debes seleccionar un alumno.")
