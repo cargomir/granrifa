@@ -250,7 +250,7 @@ def barra_superior():
     with col_boton:
         st.markdown(
             """
-            <div style='height:50px;'></div>
+            <div style='height:55px;'></div>
             """,
             unsafe_allow_html=True
         )
