@@ -342,15 +342,21 @@ def render_dashboard_visual():
         tabla_vendedor = (
             df_vendedor
             .groupby(["vendedor", "estado"])
-            .size()
-            .reset_index(name="cantidad")
+            .agg(
+                cantidad=("numero", "count"),
+                numeros=("numero", lambda x: ", ".join(
+                    str(n) for n in sorted(x)
+                ))
+            )
+            .reset_index()
             .sort_values(["vendedor", "estado"])
         )
 
         tabla_vendedor = tabla_vendedor.rename(columns={
             "vendedor": "Vendedor",
             "estado": "Estado",
-            "cantidad": "Cantidad"
+            "cantidad": "Cantidad",
+            "numeros": "Números"
         })
 
         mostrar_tabla_estilizada(tabla_vendedor, height=250)
