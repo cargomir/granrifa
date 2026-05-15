@@ -247,7 +247,7 @@ def render_vendedor():
 
     with col_prefijo:
         st.text_input(
-            "Código",
+            "Código (automático)",
             value="+56",
             disabled=True
         )
