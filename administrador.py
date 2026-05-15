@@ -195,7 +195,7 @@ def render_administrador():
     col_logo, col_titulo = st.columns([1, 8])
 
     with col_logo:
-        st.image("logo.png", width=120)
+        st.image("logo.png", width=150)
 
     with col_titulo:
         st.markdown(
