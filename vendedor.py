@@ -319,8 +319,7 @@ def render_vendedor():
     # -----------------------------
     # Paso 3: Botones de acción
     # -----------------------------
-    col_izq, col_centro, col_der = st.columns([1, 1, 1])
-
+    
     def reservar():
         if not nombre_actual.strip():
             st.error("Debes ingresar el nombre del comprador.")
@@ -422,6 +421,8 @@ def render_vendedor():
     - **Nº de cuenta:** 1097008263
     """
         )
+
+        col_izq, col_centro, col_der = st.columns([1, 1, 1])
 
         with col_centro:
             if st.button(
