@@ -358,17 +358,6 @@ def barra_superior():
                 width="stretch"
             ):
                 cerrar_sesion()
-
-            st.markdown(
-                """
-                <style>
-                div.stButton {
-                    margin-bottom: -45px !important;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
             
 def main():
     inicializar_estado()
