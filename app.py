@@ -282,18 +282,6 @@ def barra_superior():
 
     if is_mobile:
 
-        st.markdown(
-            """
-            <style>
-            div.block-container {
-                padding-top: 0rem !important;
-                margin-top: 0px !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-
         mostrar_logo_centrado("logo.png", ancho=150)
 
         st.markdown(
@@ -347,6 +335,13 @@ def barra_superior():
                 width="stretch"
             ):
                 cerrar_sesion()
+            
+            st.markdown(
+                """
+                <div style="margin-bottom:-25px;"></div>
+                """,
+                unsafe_allow_html=True
+            )
 
 def main():
     inicializar_estado()
