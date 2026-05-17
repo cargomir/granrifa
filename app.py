@@ -343,7 +343,7 @@ def barra_superior():
 
             /* reduce espacio después del botón cerrar sesión */
             div.stButton {
-                margin-bottom: -25px !important;
+                margin-bottom: -45px !important;
             }
 
         }
