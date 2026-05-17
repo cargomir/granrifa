@@ -338,7 +338,7 @@ def barra_superior():
             
         st.markdown(
             """
-            <div style="margin-bottom:-35px;"></div>
+            <div style="margin-bottom:-55px;"></div>
             """,
             unsafe_allow_html=True
         )
