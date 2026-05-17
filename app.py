@@ -13,17 +13,22 @@ st.set_page_config(
 )
 
 st.markdown(
-            """
-            <style>
-            div.block-container {
-                padding-top: 0rem !important;
-                margin-top: 0px !important;
-            }
+    """
+    <style>
 
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+    div.block-container {
+        padding-top: 0rem !important;
+        margin-top: 0px !important;
+    }
+
+    .barra-superior {
+        margin-bottom: -45px !important;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # Detectar ancho (mobile vs desktop)
@@ -281,6 +286,8 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
+    st.markdown("<div class='barra-superior'>", unsafe_allow_html=True)
+
     if is_mobile:
 
         mostrar_logo_centrado("logo.png", ancho=150)
@@ -337,6 +344,8 @@ def barra_superior():
             ):
                 cerrar_sesion()
             
+    st.markdown("</div>", unsafe_allow_html=True)
+
 def main():
     inicializar_estado()
 
