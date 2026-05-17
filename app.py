@@ -22,7 +22,7 @@ st.markdown(
     }
 
     .barra-superior {
-        margin-bottom: -45px !important;
+        margin-bottom: -65px !important;
     }
 
     </style>
