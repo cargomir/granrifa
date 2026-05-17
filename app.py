@@ -28,7 +28,7 @@ st.markdown(
 
             /* Texto opción NO seleccionada */
             div[role="radiogroup"] label:not(:has(input:checked)) p {
-                color: black !important;
+                color: gray !important;
             }
 
             </style>
