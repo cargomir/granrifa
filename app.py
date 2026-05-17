@@ -20,10 +20,6 @@ st.markdown(
                 margin-top: 0px !important;
             }
 
-            div[data-testid="stVerticalBlock"]{
-                gap:0rem !important;
-            }
-
             </style>
             """,
             unsafe_allow_html=True
