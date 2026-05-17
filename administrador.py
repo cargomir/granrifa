@@ -29,6 +29,7 @@ def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
     }
 
     .tabla-estilizada th {
+        background-color: #f3f4f6;
         font-weight: 700;
         text-align: center;
         padding: 12px;
@@ -39,14 +40,17 @@ def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
         text-align: center;
         padding: 11px;
         border-bottom: 1px solid #e5e7eb;
+        background-color: #ffffff !important;
+        color: #111827 !important;
     }
 
-    .tabla-estilizada tr:nth-child(even) {
-        background-color: #fafafa;
+    .tabla-estilizada tr:nth-child(even) td {
+        background-color: #f9fafb !important;
     }
 
-    .tabla-estilizada tr:hover {
-        background-color: #f1f5f9;
+    .tabla-estilizada tr:hover td {
+        background-color: #eaf2ff !important;
+        color: #111827 !important;
     }
     </style>
 
