@@ -89,7 +89,7 @@ def login():
         logo1, logo2, logo3 = st.columns([1,2,1])
 
         with logo2:
-            st.image("logo.png", width=350)
+            st.image("logo2.png", width=350)
         
         config = db.obtener_configuracion()
 
@@ -283,7 +283,7 @@ def barra_superior():
     
     if is_mobile:
 
-        mostrar_logo_centrado("logo.png", ancho=150)
+        mostrar_logo_centrado("logo2.png", ancho=150)
 
         st.markdown(
             f"""
@@ -325,7 +325,7 @@ def barra_superior():
         col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
         with col_logo:
-            st.image("logo.png", width=200)
+            st.image("logo2.png", width=200)
 
         with col_titulo:
             st.markdown(
