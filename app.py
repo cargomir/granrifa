@@ -276,6 +276,8 @@ def barra_superior():
         st.markdown(
             f"""
             <h1 style="
+                width:100vw;
+                margin-left:calc(50% - 50vw);
                 text-align:center;
                 font-size:24px;
                 font-weight:700;
