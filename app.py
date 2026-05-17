@@ -12,25 +12,6 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown(
-    """
-    <style>
-
-    /* SOLO móvil */
-    @media (max-width:700px){
-
-        section.main > div {
-            padding-top: 0rem !important;
-            margin-top: -50px;
-        }
-
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # =========================
 # Detectar ancho (mobile vs desktop)
 # =========================
@@ -288,6 +269,18 @@ def barra_superior():
         titulo = "Perfil administrador"
 
     if is_mobile:
+
+        st.markdown(
+            """
+            <style>
+            div.block-container {
+                padding-top: 0rem !important;
+                margin-top: -35px !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
         mostrar_logo_centrado("logo.png", ancho=150)
 
