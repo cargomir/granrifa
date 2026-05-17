@@ -635,7 +635,7 @@ def render_tirar_rifa():
         </div>
         """
 
-        components.html(html_ganador, height=400)
+        components.html(html_ganador, height=320)
 
         info_ganador = db.obtener_ganador_por_numero(ganador)
 
@@ -691,7 +691,7 @@ def render_tirar_rifa():
             </div>
             """
 
-            components.html(html_nombre_ganador, height=350)
+            components.html(html_nombre_ganador, height=250)
 
         else:
             html_numero_al_agua = """
@@ -727,4 +727,4 @@ def render_tirar_rifa():
             </div>
             """
 
-            components.html(html_numero_al_agua, height=190)
+            components.html(html_numero_al_agua, height=250)
