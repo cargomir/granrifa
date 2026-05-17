@@ -6,11 +6,28 @@ from administrador import render_administrador
 from streamlit_javascript import st_javascript
 import base64
 
-
 st.set_page_config(
     page_title="La Gran Rifa",
     page_icon="🎟️",
     layout="wide"
+)
+
+st.markdown(
+    """
+    <style>
+
+    /* SOLO móvil */
+    @media (max-width:700px){
+
+        section.main > div {
+            padding-top: 0rem;
+        }
+
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 # =========================
