@@ -277,7 +277,7 @@ def barra_superior():
             f"""
             <h1 style="
                 width:100vw;
-                margin-left:10px;
+                margin-left:7px;
                 text-align:center;
                 font-size:24px;
                 font-weight:700;
