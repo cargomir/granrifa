@@ -12,6 +12,18 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown(
+            """
+            <style>
+            div.block-container {
+                padding-top: 0rem !important;
+                margin-top: 0px !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
 # =========================
 # Detectar ancho (mobile vs desktop)
 # =========================
