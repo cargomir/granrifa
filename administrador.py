@@ -219,7 +219,7 @@ def render_administrador():
         render_administracion()
 
 def render_gestion_compras():
-    st.subheader("Compras activas pendientes de pago")
+    st.subheader("Compras pendientes de pago")
 
     pendientes = db.compras_pendientes()
 

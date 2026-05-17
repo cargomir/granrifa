@@ -17,103 +17,6 @@ def _limpiar_formulario_numero():
 
     st.session_state["pagado_alumno"] = True
 
-def _mostrar_reservados(id_compra: str):
-    if not id_compra:
-        return
-    
-    numeros = db.numeros_de_compra(id_compra)
-    if not numeros:
-        st.info("Aún no hay números reservados en esta compra.")
-        return
-
-    df = pd.DataFrame(numeros)
-    df = df.rename(columns={
-    "numero": "Número",
-    "nombre_comprador": "Comprador",
-    "estado": "Estado",
-    "precio_unitario": "Precio unitario"
-    })
-
-    df = df[["Número", "Comprador", "Estado", "Precio unitario"]]
-
-    # Formato precio
-    df["Precio unitario"] = df["Precio unitario"].apply(
-        lambda x: f"${x:,.0f}".replace(",", ".")
-    )
-
-    # Emoji estado
-    df["Estado"] = df["Estado"].replace({
-        "reservado": "🟨 Reservado",
-        "pagado": "🟥 Pagado",
-        "disponible": "🟩 Disponible"
-    })
-
-    html_tabla = """
-    <style>
-    .tabla-reservados {
-        width: 100%;
-        border-collapse: collapse;
-        border-radius: 12px;
-        overflow: hidden;
-        font-size: 15px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    .tabla-reservados th {
-        background-color: #f3f4f6;
-        font-weight: 700;
-        text-align: center;
-        padding: 12px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .tabla-reservados td {
-        text-align: center;
-        padding: 11px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .tabla-reservados tr:nth-child(even) {
-        background-color: #fafafa;
-    }
-
-    .tabla-reservados tr:hover {
-        background-color: #f1f5f9;
-    }
-    </style>
-
-    <table class="tabla-reservados">
-        <thead>
-            <tr>
-                <th>Número</th>
-                <th>Comprador</th>
-                <th>Estado</th>
-                <th>Precio unitario</th>
-            </tr>
-        </thead>
-        <tbody>
-    """
-
-    for _, row in df.iterrows():
-
-        html_tabla += f"""
-        <tr>
-            <td>{row['Número']}</td>
-            <td>{row['Comprador']}</td>
-            <td>{row['Estado']}</td>
-            <td>{row['Precio unitario']}</td>
-        </tr>
-        """
-
-    html_tabla += """
-        </tbody>
-    </table>
-    """
-
-    components.html(html_tabla, height=220, scrolling=False)
-
-
 def render_vendedor():
     
     st_autorefresh(interval=90000, key="refresh_vendedor")
@@ -122,8 +25,6 @@ def render_vendedor():
     p_actual = float(config["p"])
     t_actual = int(config["t"])
 
-    if "id_compra_activa" not in st.session_state:
-        st.session_state.id_compra_activa = None
     if "nombre_vendedor_activo" not in st.session_state:
         st.session_state.nombre_vendedor_activo = None
     
@@ -138,7 +39,6 @@ def render_vendedor():
 
     if not disponibles:
         st.warning("No hay números disponibles en este momento.")
-        _mostrar_reservados(st.session_state.id_compra_activa)
         return
 
     st.markdown("""
@@ -315,8 +215,6 @@ def render_vendedor():
             pagado_alumno=pagado_alumno
         )
 
-        st.session_state.id_compra_activa = id_compra_actual
-
         errores = []
         exitos = []
 
@@ -350,7 +248,6 @@ def render_vendedor():
             return
 
         _limpiar_formulario_numero()
-        st.session_state.id_compra_activa = None
 
         st.rerun()
 
