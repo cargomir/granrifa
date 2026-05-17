@@ -21,7 +21,7 @@ st.markdown(
 
         section.main > div {
             padding-top: 0rem !important;
-            margin-top: -20px;
+            margin-top: -50px;
         }
 
     }
