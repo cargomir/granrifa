@@ -13,17 +13,49 @@ st.set_page_config(
 )
 
 st.markdown(
-            """
-            <style>
-            div.block-container {
-                padding-top: 0rem !important;
-                margin-top: 0px !important;
-            }
+    """
+    <style>
+    :root {
+        --app-bg: #0E1117;
+        --card-bg: #1A1D24;
+        --card-bg-soft: #222631;
+        --text-main: #FAFAFA;
+        --text-muted: #C9D1D9;
+        --primary: #42A5F5;
+        --primary-dark: #1565C0;
+        --border: #30363D;
+    }
 
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+    .stApp {
+        background-color: var(--app-bg);
+        color: var(--text-main);
+    }
+
+    div.block-container {
+        padding-top: 0rem !important;
+        margin-top: 0px !important;
+    }
+
+    [data-testid="stMarkdownContainer"] {
+        color: var(--text-main);
+    }
+
+    .stButton > button {
+        background-color: var(--primary-dark);
+        color: white;
+        font-weight: bold;
+        border-radius: 12px;
+        border: none;
+    }
+
+    .stButton > button:hover {
+        background-color: var(--primary);
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # Detectar ancho (mobile vs desktop)
@@ -89,7 +121,7 @@ def login():
         logo1, logo2, logo3 = st.columns([1,2,1])
 
         with logo2:
-            st.image("logo2.png", width=350)
+            st.image("logo.png", width=350)
         
         config = db.obtener_configuracion()
 
@@ -283,7 +315,7 @@ def barra_superior():
     
     if is_mobile:
 
-        mostrar_logo_centrado("logo2.png", ancho=150)
+        mostrar_logo_centrado("logo.png", ancho=150)
 
         st.markdown(
             f"""
@@ -325,7 +357,7 @@ def barra_superior():
         col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
 
         with col_logo:
-            st.image("logo2.png", width=200)
+            st.image("logo.png", width=200)
 
         with col_titulo:
             st.markdown(
