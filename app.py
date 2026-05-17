@@ -336,13 +336,22 @@ def barra_superior():
             ):
                 cerrar_sesion()
             
-    st.markdown(
-        """
-        <div style="margin-bottom:-55px;"></div>
-        """,
-        unsafe_allow_html=True
-    )
+            st.markdown(
+                """
+                <style>
+                @media (max-width:700px){
 
+                    /* reduce espacio después del botón cerrar sesión */
+                    div.stButton {
+                        margin-bottom: -25px !important;
+                    }
+
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            
 def main():
     inicializar_estado()
 
