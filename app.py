@@ -20,7 +20,8 @@ st.markdown(
     @media (max-width:700px){
 
         section.main > div {
-            padding-top: 0rem;
+            padding-top: 0rem !important;
+            margin-top: -20px;
         }
 
     }
