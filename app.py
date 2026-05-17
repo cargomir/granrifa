@@ -3,6 +3,8 @@ import pandas as pd
 import db
 from vendedor import render_vendedor
 from administrador import render_administrador
+from streamlit_javascript import st_javascript
+import base64
 
 
 st.set_page_config(
@@ -10,6 +12,37 @@ st.set_page_config(
     page_icon="🎟️",
     layout="wide"
 )
+
+# =========================
+# Detectar ancho (mobile vs desktop)
+# =========================
+
+width = st_javascript("window.innerWidth")
+
+if width is None:
+    width = 1200
+
+is_mobile = width < 700
+
+
+def mostrar_logo_centrado(ruta, ancho=150):
+    with open(ruta, "rb") as f:
+        data = base64.b64encode(f.read()).decode()
+
+    st.markdown(
+        f"""
+        <div style="
+            width:100%;
+            display:flex;
+            justify-content:center;
+            margin-top:0px;
+            margin-bottom:10px;
+        ">
+            <img src="data:image/png;base64,{data}" width="{ancho}" />
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 def inicializar_estado():
@@ -236,21 +269,19 @@ def barra_superior():
     else:
         titulo = "Perfil administrador"
 
-    col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
+    if is_mobile:
 
-    with col_logo:
-        st.image("logo.png", width=200)
+        mostrar_logo_centrado("logo.png", ancho=150)
 
-    with col_titulo:
         st.markdown(
-            f"<h1 style='margin-top:50px;'>{titulo}</h1>",
-            unsafe_allow_html=True
-        )
-
-    with col_boton:
-        st.markdown(
-            """
-            <div style='height:80px;'></div>
+            f"""
+            <h1 style="
+                text-align:center;
+                margin-top:0px;
+                margin-bottom:10px;
+            ">
+                {titulo}
+            </h1>
             """,
             unsafe_allow_html=True
         )
@@ -261,6 +292,34 @@ def barra_superior():
             width="stretch"
         ):
             cerrar_sesion()
+
+    else:
+
+        col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
+
+        with col_logo:
+            st.image("logo.png", width=200)
+
+        with col_titulo:
+            st.markdown(
+                f"<h1 style='margin-top:50px;'>{titulo}</h1>",
+                unsafe_allow_html=True
+            )
+
+        with col_boton:
+            st.markdown(
+                """
+                <div style='height:80px;'></div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            if st.button(
+                "Cerrar sesión",
+                type="primary",
+                width="stretch"
+            ):
+                cerrar_sesion()
 
 def main():
     inicializar_estado()
