@@ -277,9 +277,9 @@ def barra_superior():
             f"""
             <h1 style="
                 text-align:center;
-                font-size:16px;
+                font-size:24px;
                 font-weight:700;
-                margin-top:0px;
+                margin-top:-20px;
                 margin-bottom:10px;
             ">
                 {titulo}
