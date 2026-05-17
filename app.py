@@ -13,22 +13,17 @@ st.set_page_config(
 )
 
 st.markdown(
-    """
-    <style>
+            """
+            <style>
+            div.block-container {
+                padding-top: 0rem !important;
+                margin-top: 0px !important;
+            }
 
-    div.block-container {
-        padding-top: 0rem !important;
-        margin-top: 0px !important;
-    }
-
-    .barra-superior {
-        margin-bottom: -65px !important;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
 # =========================
 # Detectar ancho (mobile vs desktop)
@@ -285,9 +280,7 @@ def barra_superior():
         titulo = "Perfil vendedor"
     else:
         titulo = "Perfil administrador"
-
-    st.markdown("<div class='barra-superior'>", unsafe_allow_html=True)
-
+    
     if is_mobile:
 
         mostrar_logo_centrado("logo.png", ancho=150)
@@ -316,6 +309,17 @@ def barra_superior():
         ):
             cerrar_sesion()
 
+        st.markdown(
+            """
+            <style>
+            div.stButton {
+                margin-bottom: -45px !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
     else:
 
         col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
@@ -343,9 +347,18 @@ def barra_superior():
                 width="stretch"
             ):
                 cerrar_sesion()
-            
-    st.markdown("</div>", unsafe_allow_html=True)
 
+            st.markdown(
+                """
+                <style>
+                div.stButton {
+                    margin-bottom: -45px !important;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            
 def main():
     inicializar_estado()
 
