@@ -275,7 +275,7 @@ def barra_superior():
             <style>
             div.block-container {
                 padding-top: 0rem !important;
-                margin-top: -10px !important;
+                margin-top: 0px !important;
             }
             </style>
             """,
