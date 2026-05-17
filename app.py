@@ -19,6 +19,11 @@ st.markdown(
                 padding-top: 0rem !important;
                 margin-top: 0px !important;
             }
+
+            div[data-testid="stVerticalBlock"]{
+                gap:0rem !important;
+            }
+
             </style>
             """,
             unsafe_allow_html=True
@@ -335,22 +340,6 @@ def barra_superior():
                 width="stretch"
             ):
                 cerrar_sesion()
-            
-    st.markdown(
-        """
-        <style>
-        @media (max-width:700px){
-
-            /* reduce espacio después del botón cerrar sesión */
-            div.stButton {
-                margin-bottom: -65px !important;
-            }
-
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
             
 def main():
     inicializar_estado()
