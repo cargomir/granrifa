@@ -336,12 +336,12 @@ def barra_superior():
             ):
                 cerrar_sesion()
             
-        st.markdown(
-            """
-            <div style="margin-bottom:-55px;"></div>
-            """,
-            unsafe_allow_html=True
-        )
+    st.markdown(
+        """
+        <div style="margin-bottom:-55px;"></div>
+        """,
+        unsafe_allow_html=True
+    )
 
 def main():
     inicializar_estado()
