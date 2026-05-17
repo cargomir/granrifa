@@ -61,26 +61,25 @@ def _mostrar_reservados(id_compra: str):
     }
 
     .tabla-reservados th {
-        background-color: var(--card-bg-soft);
-        color: var(--text-main);
+        background-color: #f3f4f6;
         font-weight: 700;
         text-align: center;
         padding: 12px;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .tabla-reservados td {
         text-align: center;
         padding: 11px;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .tabla-reservados tr:nth-child(even) {
-        background-color: var(--card-bg);
+        background-color: #fafafa;
     }
 
     .tabla-reservados tr:hover {
-        background-color: var(--card-bg-soft);
+        background-color: #f1f5f9;
     }
     </style>
 
@@ -459,27 +458,25 @@ def render_vendedor():
         }
 
         .tabla-ventas th {
-            background-color: var(--card-bg-soft);
-            color: var(--text-main);
+            background-color: #f3f4f6;
             font-weight: 700;
             text-align: center;
             padding: 12px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .tabla-ventas td {
             text-align: center;
             padding: 11px;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .tabla-ventas tr:nth-child(even) {
-            background-color: var(--card-bg);
+            background-color: #fafafa;
         }
 
         .tabla-ventas tr:hover {
-            background-color: var(--card-bg-soft);
+            background-color: #f1f5f9;
         }
         </style>
 

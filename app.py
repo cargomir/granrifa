@@ -13,49 +13,17 @@ st.set_page_config(
 )
 
 st.markdown(
-    """
-    <style>
-    :root {
-        --app-bg: #0E1117;
-        --card-bg: #1A1D24;
-        --card-bg-soft: #222631;
-        --text-main: #FAFAFA;
-        --text-muted: #C9D1D9;
-        --primary: #42A5F5;
-        --primary-dark: #1565C0;
-        --border: #30363D;
-    }
+            """
+            <style>
+            div.block-container {
+                padding-top: 0rem !important;
+                margin-top: 0px !important;
+            }
 
-    .stApp {
-        background-color: var(--app-bg);
-        color: var(--text-main);
-    }
-
-    div.block-container {
-        padding-top: 0rem !important;
-        margin-top: 0px !important;
-    }
-
-    [data-testid="stMarkdownContainer"] {
-        color: var(--text-main);
-    }
-
-    .stButton > button {
-        background-color: var(--primary-dark);
-        color: white;
-        font-weight: bold;
-        border-radius: 12px;
-        border: none;
-    }
-
-    .stButton > button:hover {
-        background-color: var(--primary);
-        color: white;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
 # =========================
 # Detectar ancho (mobile vs desktop)
