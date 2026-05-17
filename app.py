@@ -313,7 +313,7 @@ def barra_superior():
             """
             <style>
             div.stButton {
-                margin-bottom: -45px !important;
+                margin-bottom: -65px !important;
             }
             </style>
             """,
