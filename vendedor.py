@@ -61,7 +61,6 @@ def _mostrar_reservados(id_compra: str):
     }
 
     .tabla-reservados th {
-        background-color: #f3f4f6;
         font-weight: 700;
         text-align: center;
         padding: 12px;
@@ -75,11 +74,11 @@ def _mostrar_reservados(id_compra: str):
     }
 
     .tabla-reservados tr:nth-child(even) {
-        background-color: #fafafa;
+
     }
 
     .tabla-reservados tr:hover {
-        background-color: #f1f5f9;
+        
     }
     </style>
 
@@ -458,7 +457,6 @@ def render_vendedor():
         }
 
         .tabla-ventas th {
-            background-color: #f3f4f6;
             font-weight: 700;
             text-align: center;
             padding: 12px;
@@ -472,11 +470,11 @@ def render_vendedor():
         }
 
         .tabla-ventas tr:nth-child(even) {
-            background-color: #fafafa;
+
         }
 
         .tabla-ventas tr:hover {
-            background-color: #f1f5f9;
+            
         }
         </style>
 

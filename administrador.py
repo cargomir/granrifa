@@ -29,7 +29,6 @@ def mostrar_tabla_estilizada(df: pd.DataFrame, height: int = 260):
     }
 
     .tabla-estilizada th {
-        background-color: #f3f4f6;
         font-weight: 700;
         text-align: center;
         padding: 12px;
