@@ -20,6 +20,23 @@ st.markdown(
                 margin-top: 0px !important;
             }
 
+            /* Opción seleccionada */
+            div[role="radiogroup"] label[data-baseweb="radio"] input:checked + div {
+                background-color: #1565C0 !important;
+                border-color: #1565C0 !important;
+            }
+
+            /* Texto seleccionado */
+            div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+                color: #1565C0 !important;
+                font-weight: bold;
+            }
+
+            /* No seleccionado */
+            div[role="radiogroup"] label[data-baseweb="radio"]:not(:has(input:checked)) {
+                color: gray !important;
+            }
+
             </style>
             """,
             unsafe_allow_html=True
