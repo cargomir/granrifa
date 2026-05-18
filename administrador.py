@@ -284,7 +284,7 @@ def render_gestion_compras():
             
             df = df.rename(columns={
                 "id_compra": "ID compra",
-                "fecha_hora_compra": "Fecha compra",
+                "fecha_hora_compra": "Fecha y hora",
                 "nombre_alumno_vendedor": "Vendedor",
                 "nombre_comprador": "Comprador",
                 "forma_pago": "Forma pago",
@@ -301,7 +301,7 @@ def render_gestion_compras():
                 df[
                     [
                         "ID compra",
-                        "Fecha compra",
+                        "Fecha compra y hora",
                         "Vendedor",
                         "Comprador",
                         "Forma pago",
