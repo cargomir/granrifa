@@ -271,19 +271,53 @@ def render_vendedor():
 
         st.info(
             f"""
-    ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de **{tiempo_texto}** desde la reserva.
+        ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de **{tiempo_texto}** desde la reserva.
 
-    Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
+        Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
 
-    ### Datos de transferencia
+        ### Datos de transferencia
 
-    - **Nombre:** Susan Velozo Catalán
-    - **Correo electrónico:** susanvelozo@hotmail.com
-    - **Tipo de cuenta:** Vista
-    - **RUT:** 16.956.509-0
-    - **Banco:** Mercado Pago
-    - **Nº de cuenta:** 1097008263
-    """
+        - **Nombre:** Susan Velozo Catalán
+        - **Correo electrónico:** susanvelozo@hotmail.com
+        - **Tipo de cuenta:** Vista
+        - **RUT:** 16.956.509-0
+        - **Banco:** Mercado Pago
+        - **Nº de cuenta:** 1097008263
+        """
+        )
+
+        datos_transferencia = """
+        Nombre: Susan Velozo Catalán
+        Correo: susanvelozo@hotmail.com
+        Tipo de cuenta: Vista
+        RUT: 16.956.509-0
+        Banco: Mercado Pago
+        Nº de cuenta: 1097008263
+        """
+
+        components.html(
+            f"""
+            <button
+                onclick="
+                navigator.clipboard.writeText(`{datos_transferencia}`);
+                this.innerText='✅ Datos copiados';
+                "
+                style="
+                    width:100%;
+                    background:#1565C0;
+                    color:white;
+                    border:none;
+                    border-radius:10px;
+                    padding:12px;
+                    font-size:16px;
+                    font-weight:600;
+                    cursor:pointer;
+                "
+            >
+                📋 Copiar datos bancarios
+            </button>
+            """,
+            height=60
         )
 
         col_izq, col_centro, col_der = st.columns([1, 1, 1])
