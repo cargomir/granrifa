@@ -277,19 +277,10 @@ def render_gestion_compras():
 
                         st.rerun()
 
-                    if (
-                        st.session_state.get("compra_confirmada")
-                        == compra["id_compra"]
-                    ):
-
-                        st.markdown(
-                            "<div style='height:30px'></div>",
-                            unsafe_allow_html=True
-                        )
-
-                        st.success(
-                            "Pago confirmado. Todos los números de la compra quedaron pagados."
-                        )
+                    st.markdown(
+                        "<div style='height:24px'></div>",
+                        unsafe_allow_html=True
+                    )
 
     st.divider()
 
