@@ -286,7 +286,7 @@ def render_gestion_compras():
                 "id_compra": "ID compra",
                 "fecha_hora_compra": "Fecha compra",
                 "nombre_alumno_vendedor": "Vendedor",
-                "compradores": "Comprador",
+                "nombre_comprador": "Comprador",
                 "forma_pago": "Forma pago",
                 "cantidad": "Cantidad",
                 "total": "Total",
