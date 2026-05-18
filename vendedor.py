@@ -401,4 +401,4 @@ def render_vendedor():
 
         html_tabla += "</tbody></table>"
 
-        components.html(html_tabla, height=400, scrolling=True)
+        components.html(html_tabla, height=450, scrolling=True)
