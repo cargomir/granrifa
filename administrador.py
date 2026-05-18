@@ -264,8 +264,21 @@ def render_gestion_compras():
                         type="primary"
                     ):
                         db.confirmar_pago_compra(compra["id_compra"], forma_pago)
-                        st.success("Pago confirmado. Todos los números de la compra quedaron pagados.")
+
+                        st.session_state["mensaje_pago"] = (
+                            "Pago confirmado. Todos los números de la compra quedaron pagados."
+                        )
+
                         st.rerun()
+
+                    st.markdown(
+                        "<div style='height:20px'></div>",
+                        unsafe_allow_html=True
+                    )
+
+                    if "mensaje_pago" in st.session_state:
+                        st.success(st.session_state["mensaje_pago"])
+                        del st.session_state["mensaje_pago"]
 
     st.divider()
 
