@@ -278,7 +278,7 @@ def render_gestion_compras():
                         st.rerun()
 
                     st.markdown(
-                        "<div style='height:24px'></div>",
+                        "<div style='height:30px'></div>",
                         unsafe_allow_html=True
                     )
 
