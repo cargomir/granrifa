@@ -295,6 +295,8 @@ def render_vendedor():
         Nº de cuenta: 1097008263
         """
 
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+
         components.html(
             f"""
             <button
@@ -317,7 +319,7 @@ def render_vendedor():
                 📋 Copiar datos bancarios
             </button>
             """,
-            height=60
+            height=90
         )
 
         col_izq, col_centro, col_der = st.columns([1, 1, 1])
