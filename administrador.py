@@ -223,6 +223,14 @@ def render_gestion_compras():
 
     pendientes = db.compras_pendientes()
 
+    ids_pendientes = [p["id_compra"] for p in pendientes]
+
+    if (
+        "compra_confirmada" in st.session_state
+        and st.session_state["compra_confirmada"] not in ids_pendientes
+    ):
+        del st.session_state["compra_confirmada"]
+
     if not pendientes:
         st.info("No hay compras pendientes con números reservados vigentes.")
     else:
@@ -265,20 +273,17 @@ def render_gestion_compras():
                     ):
                         db.confirmar_pago_compra(compra["id_compra"], forma_pago)
 
-                        st.session_state["mensaje_pago"] = (
-                            "Pago confirmado. Todos los números de la compra quedaron pagados."
-                        )
+                        st.session_state["compra_confirmada"] = compra["id_compra"]
 
                         st.rerun()
 
-                    st.markdown(
-                        "<div style='height:30px'></div>",
-                        unsafe_allow_html=True
-                    )
+                    if st.session_state.get("compra_confirmada") == compra["id_compra"]:
+                        st.markdown(
+                            "<div style='height:30px'></div>",
+                            unsafe_allow_html=True
+                        )
 
-                    if "mensaje_pago" in st.session_state:
-                        st.success(st.session_state["mensaje_pago"])
-                        del st.session_state["mensaje_pago"]
+                        st.success("Pago confirmado. Todos los números de la compra quedaron pagados.")
 
     st.divider()
 
