@@ -258,9 +258,7 @@ def render_vendedor():
     )
 
     col_izq, col_centro, col_der = st.columns([1, 1, 1])
-
-    placeholder_confirmacion = st.empty()
-    
+  
     if not pagado_alumno:
 
         horas = t_actual // 60
@@ -298,6 +296,10 @@ def render_vendedor():
                 width=250
             ):
                 reservar()
+            
+            if "mensaje_confirmacion" in st.session_state:
+                st.success(st.session_state["mensaje_confirmacion"])
+                st.session_state.pop("mensaje_confirmacion", None)
 
     else:
 
@@ -310,9 +312,9 @@ def render_vendedor():
             ):
                 reservar()
 
-    if "mensaje_confirmacion" in st.session_state:
-            placeholder_confirmacion.success(st.session_state["mensaje_confirmacion"])
-            st.session_state.pop("mensaje_confirmacion", None)
+            if "mensaje_confirmacion" in st.session_state:
+                st.success(st.session_state["mensaje_confirmacion"])
+                st.session_state.pop("mensaje_confirmacion", None)
 
     ventas_alumno = db.compras_por_alumno(
         st.session_state.nombre_vendedor_activo
