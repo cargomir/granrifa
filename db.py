@@ -741,7 +741,8 @@ def compras_pagadas() -> List[Dict[str, Any]]:
             forma_pago,
             numeros(
                 numero,
-                precio_unitario
+                precio_unitario,
+                compradores(nombre_comprador)
             )
         """)
         .eq("pagado", "Sí")
@@ -762,6 +763,12 @@ def compras_pagadas() -> List[Dict[str, Any]]:
             for n in nums
         )
 
+        compradores = sorted(set(
+            (n.get("compradores") or {}).get("nombre_comprador", "")
+            for n in nums
+            if (n.get("compradores") or {}).get("nombre_comprador", "")
+        ))
+
         salida.append({
             "id_compra": c["id_compra"],
 
@@ -773,6 +780,7 @@ def compras_pagadas() -> List[Dict[str, Any]]:
             ),
 
             "nombre_alumno_vendedor": c.get("nombre_alumno_vendedor"),
+            "nombre_comprador": ", ".join(compradores),
             "forma_pago": c.get("forma_pago"),
 
             "cantidad": len(nums),
