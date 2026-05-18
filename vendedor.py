@@ -297,7 +297,7 @@ def render_vendedor():
             ):
                 reservar()
 
-            st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
             if "mensaje_confirmacion" in st.session_state:
                 st.success(st.session_state["mensaje_confirmacion"])
@@ -314,7 +314,7 @@ def render_vendedor():
             ):
                 reservar()
 
-            st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
             if "mensaje_confirmacion" in st.session_state:
                 st.success(st.session_state["mensaje_confirmacion"])
