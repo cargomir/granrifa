@@ -719,7 +719,7 @@ def render_tirar_rifa():
             ">
 
                 <div style="
-                    font-size:28px;
+                    font-size:24px;
                     font-weight:900;
                     margin-bottom:12px;
                 ">
