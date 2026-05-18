@@ -245,7 +245,7 @@ def render_gestion_compras():
                 st.write(f"**Vendedor:** {compra['nombre_alumno_vendedor']}")
                 st.write(f"**Comprador:** {compra['compradores']}")
                 st.write(f"**Números:** {compra['numeros']}")
-                st.write(f"**Fecha compra:** {compra['fecha_hora_compra']}")
+                st.write(f"**Fecha y hora compra:** {compra['fecha_hora_compra']}")
 
                 with st.expander("Confirmar pago"):
 
