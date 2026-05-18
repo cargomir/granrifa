@@ -301,7 +301,7 @@ def render_gestion_compras():
                 df[
                     [
                         "ID compra",
-                        "Fecha compra y hora",
+                        "Fecha y hora",
                         "Vendedor",
                         "Comprador",
                         "Forma pago",
