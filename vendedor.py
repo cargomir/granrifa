@@ -322,16 +322,14 @@ def render_vendedor():
             height=90
         )
 
-        col_izq, col_centro, col_der = st.columns([1, 1, 1])
-
-        with col_centro:
-            if st.button(
-                "Finalizar compra",
-                type="primary",
-                disabled=formulario_incompleto,
-                width=250
-            ):
-                reservar()
+        if st.button(
+            "Finalizar compra",
+            type="primary",
+            disabled=formulario_incompleto,
+            use_container_width=True,
+            key="finalizar_compra_transferencia"
+        ):
+            reservar()
 
             st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
@@ -341,20 +339,20 @@ def render_vendedor():
 
     else:
 
-        with col_centro:
-            if st.button(
-                "Finalizar compra",
-                type="primary",
-                disabled=formulario_incompleto,
-                width=250
-            ):
-                reservar()
+        if st.button(
+            "Finalizar compra",
+            type="primary",
+            disabled=formulario_incompleto,
+            use_container_width=True,
+            key="finalizar_compra_directa"
+        ):
+            reservar()
 
-            st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
-            if "mensaje_confirmacion" in st.session_state:
-                st.success(st.session_state["mensaje_confirmacion"])
-                st.session_state.pop("mensaje_confirmacion", None)
+    if "mensaje_confirmacion" in st.session_state:
+        st.success(st.session_state["mensaje_confirmacion"])
+        st.session_state.pop("mensaje_confirmacion", None)
 
     ventas_alumno = db.compras_por_alumno(
         st.session_state.nombre_vendedor_activo
