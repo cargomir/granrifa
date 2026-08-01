@@ -18,8 +18,18 @@ def _limpiar_formulario_numero():
     st.session_state["pagado_alumno"] = True
 
 def render_vendedor():
-    
-    st_autorefresh(interval=90000, key="refresh_vendedor")
+
+    # Evita que el refresco automático interrumpa la escritura o un toque en móvil.
+    formulario_en_uso = bool(
+        st.session_state.get("numeros_seleccionados")
+        or st.session_state.get("nombre_comprador_input", "").strip()
+        or st.session_state.get("telefono_numero_input", "").strip()
+        or st.session_state.get("correo_input", "").strip()
+    )
+    procesando_compra = st.session_state.get("procesando_compra", False)
+
+    if not formulario_en_uso and not procesando_compra:
+        st_autorefresh(interval=90000, key="refresh_vendedor")
 
     config = db.obtener_configuracion()
     p_actual = float(config["p"])
@@ -43,6 +53,29 @@ def render_vendedor():
 
     st.markdown("""
     <style>
+
+    /* Mejoras generales para pantallas táctiles */
+    div[data-testid="stButton"] > button {
+        min-height: 56px !important;
+        padding: 12px 18px !important;
+        border-radius: 14px !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+        user-select: none !important;
+    }
+
+    div[data-testid="stButton"] > button:active {
+        transform: scale(0.985);
+    }
+
+    @media (max-width: 640px) {
+        div[data-testid="stButton"] > button {
+            min-height: 60px !important;
+            font-size: 19px !important;
+        }
+    }
 
     button[kind="pills"] {
         background-color: #E3F2FD !important;
@@ -82,11 +115,12 @@ def render_vendedor():
     """, unsafe_allow_html=True)
 
     numeros_seleccionados = st.pills(
-        "",
+        "Selecciona los números",
         disponibles,
         selection_mode="multi",
         key="numeros_seleccionados",
-        format_func=lambda x: f"Número {x}"
+        format_func=lambda x: f"Número {x}",
+        label_visibility="collapsed"
     )
 
     if numeros_seleccionados:
@@ -190,25 +224,25 @@ def render_vendedor():
     def reservar():
         if not nombre_actual.strip():
             st.error("Debes ingresar el nombre del comprador.")
-            return
+            return False
 
         ok_tel, msg_tel = db.validar_telefono(telefono)
 
         if not ok_tel:
             st.error(msg_tel)
-            return
+            return False
 
         ok_correo, msg_correo = db.validar_correo(correo)
 
         if not ok_correo:
             st.error(msg_correo)
-            return
+            return False
 
         id_comprador = db.upsert_comprador(nombre_actual, telefono, correo)
         
         if not numeros_seleccionados:
             st.error("Debes seleccionar al menos un número.")
-            return
+            return False
 
         id_compra_actual = db.crear_compra(
             st.session_state.nombre_vendedor_activo,
@@ -245,11 +279,10 @@ def render_vendedor():
                 st.error(e)
 
         if errores and not exitos:
-            return
+            return False
 
         _limpiar_formulario_numero()
-
-        st.rerun()
+        return True
 
     formulario_incompleto = (
         not numeros_seleccionados
@@ -257,8 +290,8 @@ def render_vendedor():
         or not telefono_numero.strip()
     )
 
-    col_izq, col_centro, col_der = st.columns([1, 1, 1])
-  
+    procesando_compra = st.session_state.get("procesando_compra", False)
+
     if not pagado_alumno:
 
         horas = t_actual // 60
@@ -286,67 +319,48 @@ def render_vendedor():
         """
         )
 
-        datos_transferencia = """
-        Nombre: Susan Velozo Catalán
-        Correo: susanvelozo@hotmail.com
-        Tipo de cuenta: Vista
-        RUT: 16.956.509-0
-        Banco: Mercado Pago
-        Nº de cuenta: 1097008263
-        """
-
-        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-
-        components.html(
-            f"""
-            <button
-                onclick="
-                navigator.clipboard.writeText(`{datos_transferencia}`);
-                this.innerText='✅ Datos copiados';
-                "
-                style="
-                    width:100%;
-                    background:#1565C0;
-                    color:white;
-                    border:none;
-                    border-radius:10px;
-                    padding:12px;
-                    font-size:16px;
-                    font-weight:600;
-                    cursor:pointer;
-                "
-            >
-                📋 Copiar datos bancarios
-            </button>
-            """,
-            height=90
+        # st.code es nativo de Streamlit y ofrece botón de copia sin usar iframe.
+        st.caption("Puedes copiar los datos con el botón del recuadro:")
+        st.code(
+            "Nombre: Susan Velozo Catalán\n"
+            "Correo: susanvelozo@hotmail.com\n"
+            "Tipo de cuenta: Vista\n"
+            "RUT: 16.956.509-0\n"
+            "Banco: Mercado Pago\n"
+            "Nº de cuenta: 1097008263",
+            language=None,
         )
 
-        if st.button(
-            "Finalizar compra",
-            type="primary",
-            disabled=formulario_incompleto,
-            use_container_width=True,
-            key="finalizar_compra_transferencia"
-        ):
-            reservar()
+    clave_boton = (
+        "finalizar_compra_transferencia"
+        if not pagado_alumno
+        else "finalizar_compra_directa"
+    )
 
-            st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
+    boton_finalizar = st.button(
+        "Procesando compra…" if procesando_compra else "Finalizar compra",
+        type="primary",
+        disabled=formulario_incompleto or procesando_compra,
+        use_container_width=True,
+        key=clave_boton,
+    )
 
-            if "mensaje_confirmacion" in st.session_state:
-                st.success(st.session_state["mensaje_confirmacion"])
-                st.session_state.pop("mensaje_confirmacion", None)
+    if boton_finalizar:
+        st.session_state["procesando_compra"] = True
+        compra_exitosa = False
 
-    else:
+        try:
+            with st.spinner("Reservando los números seleccionados…"):
+                compra_exitosa = reservar()
+        except Exception as exc:
+            st.error(f"No fue posible finalizar la compra: {exc}")
+        finally:
+            st.session_state["procesando_compra"] = False
 
-        if st.button(
-            "Finalizar compra",
-            type="primary",
-            disabled=formulario_incompleto,
-            use_container_width=True,
-            key="finalizar_compra_directa"
-        ):
-            reservar()
+        if compra_exitosa:
+            st.rerun()
+
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
     st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
