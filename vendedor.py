@@ -68,6 +68,21 @@ def render_vendedor():
         width: 100% !important;
     }
 
+    /* Mejora únicamente la superficie táctil de los botones primarios. */
+    div[data-testid="stButton"] button[kind="primary"] {
+        min-height: 58px !important;
+        padding: 14px 18px !important;
+        font-size: 19px !important;
+        font-weight: 700 !important;
+        border-radius: 14px !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    div[data-testid="stButton"] button[kind="primary"]:active {
+        transform: scale(0.985);
+    }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -82,11 +97,12 @@ def render_vendedor():
     """, unsafe_allow_html=True)
 
     numeros_seleccionados = st.pills(
-        "",
+        "Números disponibles",
         disponibles,
         selection_mode="multi",
         key="numeros_seleccionados",
-        format_func=lambda x: f"Número {x}"
+        format_func=lambda x: f"Número {x}",
+        label_visibility="collapsed"
     )
 
     if numeros_seleccionados:
