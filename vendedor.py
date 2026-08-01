@@ -68,21 +68,6 @@ def render_vendedor():
         width: 100% !important;
     }
 
-    /* Mejora únicamente la superficie táctil de los botones primarios. */
-    div[data-testid="stButton"] button[kind="primary"] {
-        min-height: 58px !important;
-        padding: 14px 18px !important;
-        font-size: 19px !important;
-        font-weight: 700 !important;
-        border-radius: 14px !important;
-        touch-action: manipulation !important;
-        -webkit-tap-highlight-color: transparent !important;
-    }
-
-    div[data-testid="stButton"] button[kind="primary"]:active {
-        transform: scale(0.985);
-    }
-
     </style>
     """, unsafe_allow_html=True)
 
@@ -97,12 +82,11 @@ def render_vendedor():
     """, unsafe_allow_html=True)
 
     numeros_seleccionados = st.pills(
-        "Números disponibles",
+        "",
         disponibles,
         selection_mode="multi",
         key="numeros_seleccionados",
-        format_func=lambda x: f"Número {x}",
-        label_visibility="collapsed"
+        format_func=lambda x: f"Número {x}"
     )
 
     if numeros_seleccionados:
@@ -199,10 +183,10 @@ def render_vendedor():
     """
         )
 
-    # -----------------------------
-    # Paso 3: Botones de acción
-    # -----------------------------
-    
+# -----------------------------
+# Paso 3: Botones de acción
+# -----------------------------
+
     def reservar():
         if not nombre_actual.strip():
             st.error("Debes ingresar el nombre del comprador.")
@@ -220,8 +204,12 @@ def render_vendedor():
             st.error(msg_correo)
             return
 
-        id_comprador = db.upsert_comprador(nombre_actual, telefono, correo)
-        
+        id_comprador = db.upsert_comprador(
+            nombre_actual,
+            telefono,
+            correo
+        )
+
         if not numeros_seleccionados:
             st.error("Debes seleccionar al menos un número.")
             return
@@ -249,23 +237,23 @@ def render_vendedor():
 
         if exitos:
             st.session_state["mensaje_confirmacion"] = (
-                "Números reservados correctamente: " +
-                ", ".join(str(x) for x in exitos)
+                "Números reservados correctamente: "
+                + ", ".join(str(x) for x in exitos)
             )
 
         if pagado_alumno and exitos:
             db.marcar_numeros_compra_pagados(id_compra_actual)
 
         if errores:
-            for e in errores:
-                st.error(e)
+            for error in errores:
+                st.error(error)
 
         if errores and not exitos:
             return
 
         _limpiar_formulario_numero()
-
         st.rerun()
+
 
     formulario_incompleto = (
         not numeros_seleccionados
@@ -273,8 +261,7 @@ def render_vendedor():
         or not telefono_numero.strip()
     )
 
-    col_izq, col_centro, col_der = st.columns([1, 1, 1])
-  
+
     if not pagado_alumno:
 
         horas = t_actual // 60
@@ -283,23 +270,25 @@ def render_vendedor():
         if minutos == 0:
             tiempo_texto = f"{horas} hora(s)"
         else:
-            tiempo_texto = f"{horas} hora(s) y {minutos} minuto(s)"
+            tiempo_texto = (
+                f"{horas} hora(s) y {minutos} minuto(s)"
+            )
 
         st.info(
             f"""
-        ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de **{tiempo_texto}** desde la reserva.
+            ⚠️ El pago debe transferirse a la cuenta del curso en un plazo máximo de **{tiempo_texto}** desde la reserva.
 
-        Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
+            Si no se confirma el pago, los números volverán a estar disponibles automáticamente.
 
-        ### Datos de transferencia
+            ### Datos de transferencia
 
-        - **Nombre:** Susan Velozo Catalán
-        - **Correo electrónico:** susanvelozo@hotmail.com
-        - **Tipo de cuenta:** Vista
-        - **RUT:** 16.956.509-0
-        - **Banco:** Mercado Pago
-        - **Nº de cuenta:** 1097008263
-        """
+            - **Nombre:** Susan Velozo Catalán
+            - **Correo electrónico:** susanvelozo@hotmail.com
+            - **Tipo de cuenta:** Vista
+            - **RUT:** 16.956.509-0
+            - **Banco:** Mercado Pago
+            - **Nº de cuenta:** 1097008263
+            """
         )
 
         datos_transferencia = """
@@ -311,14 +300,19 @@ def render_vendedor():
         Nº de cuenta: 1097008263
         """
 
-        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='height:10px'></div>",
+            unsafe_allow_html=True
+        )
 
         components.html(
             f"""
             <button
                 onclick="
-                navigator.clipboard.writeText(`{datos_transferencia}`);
-                this.innerText='✅ Datos copiados';
+                    navigator.clipboard.writeText(
+                        `{datos_transferencia}`
+                    );
+                    this.innerText='✅ Datos copiados';
                 "
                 style="
                     width:100%;
@@ -347,12 +341,6 @@ def render_vendedor():
         ):
             reservar()
 
-            st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
-
-            if "mensaje_confirmacion" in st.session_state:
-                st.success(st.session_state["mensaje_confirmacion"])
-                st.session_state.pop("mensaje_confirmacion", None)
-
     else:
 
         if st.button(
@@ -364,11 +352,21 @@ def render_vendedor():
         ):
             reservar()
 
-    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
+
+    st.markdown(
+        "<div style='height:30px'></div>",
+        unsafe_allow_html=True
+    )
 
     if "mensaje_confirmacion" in st.session_state:
-        st.success(st.session_state["mensaje_confirmacion"])
-        st.session_state.pop("mensaje_confirmacion", None)
+        st.success(
+            st.session_state["mensaje_confirmacion"]
+        )
+        st.session_state.pop(
+            "mensaje_confirmacion",
+            None
+        )
+
 
     ventas_alumno = db.compras_por_alumno(
         st.session_state.nombre_vendedor_activo
