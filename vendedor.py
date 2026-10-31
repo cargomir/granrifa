@@ -9,6 +9,7 @@ def _limpiar_formulario_numero():
         "numeros_seleccionados",
         "nombre_comprador_input",
         "telefono_numero_input",
+        "telefono_input",
         "correo_input",
         "comprador_buscado",
         "pagado_alumno",
@@ -107,7 +108,7 @@ def render_vendedor():
     st.subheader("Paso 2 — Datos del comprador")
 
     st.session_state.setdefault("nombre_comprador_input", "")
-    st.session_state.setdefault("telefono_numero_input", "")
+    st.session_state.setdefault("telefono_input", "+569")
     st.session_state.setdefault("correo_input", "")
     st.session_state.setdefault("comprador_buscado", "")
 
@@ -122,36 +123,24 @@ def render_vendedor():
         comprador = db.obtener_comprador_por_nombre(nombre_actual.strip())
         st.session_state["comprador_buscado"] = nombre_actual
         if comprador:
-            telefono_completo = comprador.get("telefono") or ""
-
-            if telefono_completo.startswith("+56"):
-                telefono_visible = telefono_completo[3:]
-            else:
-                telefono_visible = telefono_completo
-
-            st.session_state["telefono_numero_input"] = telefono_visible
+            telefono_completo = (comprador.get("telefono") or "").strip()
+            if telefono_completo and not telefono_completo.startswith("+"):
+                telefono_completo = (
+                    f"+{telefono_completo}" if telefono_completo.startswith("56")
+                    else f"+56{telefono_completo}"
+                )
+            st.session_state["telefono_input"] = telefono_completo or "+569"
             st.session_state["correo_input"] = comprador.get("correo") or ""
 
             st.toast("Datos del comprador encontrados y autocompletados.")
             st.rerun()
 
-    col_prefijo, col_numero = st.columns([1, 8])
-
-    with col_prefijo:
-        st.text_input(
-            "Código (automático)",
-            value="+56",
-            disabled=True
-        )
-
-    with col_numero:
-        telefono_numero = st.text_input(
-            "Teléfono (obligatorio)",
-            key="telefono_numero_input",
-            placeholder="Ej: 987654321"
-        )
-
-    telefono = f"+56{telefono_numero.strip()}"
+    telefono = st.text_input(
+        "Teléfono (obligatorio)",
+        key="telefono_input",
+        placeholder="Ej: +56912345678",
+        help="Completa los 8 dígitos que faltan después de +569. No repitas el prefijo."
+    ).strip()
         
     correo = st.text_input(
         "Correo (opcional)",
@@ -277,7 +266,8 @@ def render_vendedor():
     formulario_incompleto = (
         not numeros_seleccionados
         or not nombre_actual.strip()
-        or not telefono_numero.strip()
+        or not db.validar_telefono(telefono)[0]
+        or not telefono
     )
 
 
