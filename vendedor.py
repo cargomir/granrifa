@@ -189,6 +189,14 @@ def render_vendedor():
             st.error("Debes ingresar el nombre del comprador.")
             return
 
+        if not telefono:
+            st.error("Debes ingresar el teléfono del comprador.")
+            return
+
+        if not numeros_seleccionados:
+            st.error("Debes seleccionar al menos un número.")
+            return
+
         ok_tel, msg_tel = db.validar_telefono(telefono)
 
         if not ok_tel:
@@ -263,14 +271,6 @@ def render_vendedor():
         st.rerun()
 
 
-    formulario_incompleto = (
-        not numeros_seleccionados
-        or not nombre_actual.strip()
-        or not db.validar_telefono(telefono)[0]
-        or not telefono
-    )
-
-
     if not pagado_alumno:
 
         horas = t_actual // 60
@@ -341,24 +341,15 @@ def render_vendedor():
             height=90
         )
 
-        if st.button(
-            "Finalizar compra",
-            type="primary",
-            disabled=formulario_incompleto,
-            use_container_width=True,
-            key="finalizar_compra_transferencia"
-        ):
-            reservar()
-
-    else:
-
-        if st.button(
-            "Finalizar compra",
-            type="primary",
-            disabled=formulario_incompleto,
-            use_container_width=True,
-            key="finalizar_compra_directa"
-        ):
+    # Mantener un mismo botón activo evita un toque perdido al salir del teclado
+    # móvil o al cambiar de forma de pago. Los datos se validan al enviarlos.
+    if st.button(
+        "Finalizar compra",
+        type="primary",
+        use_container_width=True,
+        key="finalizar_compra"
+    ):
+        with st.spinner("Registrando la compra, espera un momento…"):
             reservar()
 
 

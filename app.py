@@ -320,17 +320,6 @@ def barra_superior():
         ):
             cerrar_sesion()
 
-        st.markdown(
-            """
-            <style>
-            div.stButton {
-                margin-bottom: -65px !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-
     else:
 
         col_logo, col_titulo, col_boton = st.columns([1, 6, 1])
