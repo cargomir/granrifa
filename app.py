@@ -121,6 +121,16 @@ def login():
 
         premios = config.get("premios")
         fecha_rifa = config.get("fecha_rifa")
+        precio_numero = f"${float(config['p']):,.0f}".replace(",", ".")
+        st.markdown(
+            f"""
+            <p style="text-align:center; color:#0D47A1; font-size:24px;
+                      font-weight:700; margin:16px 0;">
+                🎟️ Valor de cada número: {precio_numero}
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
 
         if fecha_rifa:
             fecha_dt = pd.to_datetime(fecha_rifa)
