@@ -51,7 +51,8 @@ def guardar_configuracion(
     clave_admin: str,
     premios=None,
     fecha_rifa=None,
-    bienvenida=None
+    bienvenida=None,
+    transferencias_habilitadas: bool = True
 ) -> None:
     supabase.table("configuracion").update({
         "n": n,
@@ -62,28 +63,34 @@ def guardar_configuracion(
         "premios":premios,
         "fecha_rifa":str(fecha_rifa) if fecha_rifa else None,
         "bienvenida": bienvenida,
+        "transferencias_habilitadas": bool(transferencias_habilitadas),
     }).eq("id", 1).execute()
 
 
 def listar_alumnos() -> List[str]:
-    resp = supabase.table("alumnos").select("nombre_alumno").order("nombre_alumno").execute()
+    # El padrón se cargó en orden de lista; conservar ese orden en toda la app.
+    resp = supabase.table("alumnos").select("nombre_alumno").order("id_alumno").execute()
     return [r["nombre_alumno"] for r in _data(resp)]
 
 
 def crear_compra(nombre_alumno_vendedor: str, pagado_alumno: bool = False) -> str:
+    if not pagado_alumno and not obtener_configuracion().get("transferencias_habilitadas", True):
+        raise ValueError(
+            "El administrador desactivó el pago por transferencia. "
+            "Actualiza la página y selecciona el pago directo al alumno."
+        )
     resp = supabase.table("compras").insert({
         "nombre_alumno_vendedor": nombre_alumno_vendedor,
-        "pagado": "Sí" if pagado_alumno else "No",
-        "forma_pago": "Efectivo" if pagado_alumno else "Pendiente"
+        # Confirmar solo después de actualizar los números de la compra.
+        "pagado": "No",
+        "forma_pago": "Pendiente"
     }).execute()
 
     data = _data(resp)
     return data[0]["id_compra"]
 
 def marcar_numeros_compra_pagados(id_compra: str) -> None:
-    supabase.table("numeros").update({
-        "estado": "pagado"
-    }).eq("id_compra", id_compra).eq("estado", "reservado").execute()
+    confirmar_pago_compra(id_compra, "Efectivo")
 
 def validar_telefono(telefono: str) -> tuple[bool, str]:
     """
@@ -603,16 +610,19 @@ def parsear_fecha_supabase(fecha):
     return dt_utc.astimezone(ZONA_CHILE)
 
 def compras_pendientes() -> List[Dict[str, Any]]:
-    try:
-        liberar_reservas_expiradas()
-        config = obtener_configuracion()
-        t = int(config["t"])
+    liberar_reservas_expiradas()
+    config = obtener_configuracion()
+    t = int(config["t"])
 
+    filas = []
+    inicio = 0
+    while True:
         resp = (
             supabase.table("numeros")
             .select("""
                 id_compra,
                 numero,
+                estado,
                 precio_unitario,
                 fecha_hora_reserva,
                 compradores(nombre_comprador),
@@ -623,20 +633,27 @@ def compras_pendientes() -> List[Dict[str, Any]]:
                     pagado
                 )
             """)
-            .eq("estado", "reservado")
+            .in_("estado", ["reservado", "pagado"])
+            .order("numero")
+            .range(inicio, inicio + 499)
             .execute()
         )
-
-    except Exception as e:
-        print("Error en compras_pendientes:", e)
-        return []
-
-    filas = _data(resp)
+        pagina = _data(resp)
+        filas.extend(pagina)
+        if not pagina:
+            break
+        inicio += len(pagina)
     grupos: Dict[str, Dict[str, Any]] = {}
 
     for r in filas:
         compra = r.get("compras") or {}
-        if not compra or compra.get("pagado") != "No":
+        if not compra or not r.get("id_compra"):
+            raise RuntimeError(
+                f"El número {r.get('numero')} no tiene una compra accesible. "
+                "Revisa la relación con compras y los permisos en Supabase."
+            )
+        # Mostrar también estados discordantes para permitir completar el pago.
+        if compra.get("pagado") == "Sí" and r.get("estado") == "pagado":
             continue
 
         idc = r["id_compra"]
@@ -704,6 +721,8 @@ def compras_pendientes() -> List[Dict[str, Any]]:
 
 
 def confirmar_pago_compra(id_compra: str, forma_pago: str) -> None:
+    if forma_pago not in ("Transferencia", "Efectivo"):
+        raise ValueError("Forma de pago inválida.")
     # 1. Primero actualiza los números reservados de esa compra
     resp_numeros = (
         supabase.table("numeros")
@@ -718,10 +737,15 @@ def confirmar_pago_compra(id_compra: str, forma_pago: str) -> None:
     numeros_actualizados = _data(resp_numeros)
 
     if not numeros_actualizados:
-        raise RuntimeError(
-            "No se encontraron números reservados para esta compra. "
-            "Es posible que la reserva haya expirado o ya haya sido modificada."
-        )
+        # Si el segundo paso falló, permitir reintentar sin perder la confirmación.
+        pagados = supabase.table("numeros").select("numero").eq(
+            "id_compra", id_compra
+        ).eq("estado", "pagado").limit(1).execute()
+        if not _data(pagados):
+            raise RuntimeError(
+                "No hay números reservados ni pagados para esta compra. "
+                "Es posible que la reserva haya expirado."
+            )
 
     # 2. Luego marca la compra como pagada
     supabase.table("compras").update({

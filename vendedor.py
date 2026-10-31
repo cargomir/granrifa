@@ -18,6 +18,8 @@ def _limpiar_formulario_numero():
     st.session_state["pagado_alumno"] = True
 
 def render_vendedor():
+    if "advertencia_pago" in st.session_state:
+        st.warning(st.session_state.pop("advertencia_pago"))
     
     st_autorefresh(interval=90000, key="refresh_vendedor")
 
@@ -157,11 +159,17 @@ def render_vendedor():
         placeholder="Ej: pato_achurra@mail.com"
     )
 
-    pagado_alumno = st.checkbox(
-        f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**",
-        value=True,
-        key="pagado_alumno"
-    )
+    if config.get("transferencias_habilitadas", True):
+        pagado_alumno = st.checkbox(
+            f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**",
+            value=True,
+            key="pagado_alumno"
+        )
+    else:
+        # Descartar una elección de transferencia anterior en esta sesión.
+        st.session_state["pagado_alumno"] = True
+        pagado_alumno = True
+        st.info(f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**.")
 
 
     if not pagado_alumno:
@@ -214,10 +222,14 @@ def render_vendedor():
             st.error("Debes seleccionar al menos un número.")
             return
 
-        id_compra_actual = db.crear_compra(
-            st.session_state.nombre_vendedor_activo,
-            pagado_alumno=pagado_alumno
-        )
+        try:
+            id_compra_actual = db.crear_compra(
+                st.session_state.nombre_vendedor_activo,
+                pagado_alumno=pagado_alumno
+            )
+        except ValueError as error:
+            st.error(str(error))
+            return
 
         errores = []
         exitos = []
@@ -242,7 +254,14 @@ def render_vendedor():
             )
 
         if pagado_alumno and exitos:
-            db.marcar_numeros_compra_pagados(id_compra_actual)
+            try:
+                db.marcar_numeros_compra_pagados(id_compra_actual)
+            except Exception:
+                st.session_state["advertencia_pago"] = (
+                    "Los números quedaron reservados, pero no se pudo completar el registro "
+                    "del pago directo. Avisa al administrador para confirmar esta compra "
+                    f"desde Gestión de compras. ID: {id_compra_actual}. No repitas la compra."
+                )
 
         if errores:
             for error in errores:

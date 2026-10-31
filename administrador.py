@@ -221,7 +221,13 @@ def render_administrador():
 def render_gestion_compras():
     st.subheader("Compras pendientes de pago")
 
-    pendientes = db.compras_pendientes()
+    try:
+        pendientes = db.compras_pendientes()
+    except Exception as error:
+        st.error("No se pudieron cargar las compras pendientes. Esto no significa que no existan reservas. Vuelve a intentarlo.")
+        with st.expander("Detalle del error"):
+            st.code(str(error))
+        return
 
     if not pendientes:
         st.info("No hay compras pendientes con números reservados vigentes.")
@@ -263,9 +269,12 @@ def render_gestion_compras():
                         key=f"confirmar_{compra['id_compra']}",
                         type="primary"
                     ):
-                        db.confirmar_pago_compra(compra["id_compra"], forma_pago)
-
-                        st.rerun()
+                        try:
+                            db.confirmar_pago_compra(compra["id_compra"], forma_pago)
+                        except Exception as error:
+                            st.error(f"No se pudo completar la confirmación: {error}. Puedes reintentar.")
+                        else:
+                            st.rerun()
 
                     st.markdown(
                         "<div style='height:30px'></div>",
@@ -313,44 +322,58 @@ def render_gestion_compras():
                 height=320
             )
 
+def resumen_por_estudiante(alumnos, numeros):
+    # Incluir el padrón completo y conservar vendedores de ventas históricas.
+    vendedores = list(dict.fromkeys(alumnos))
+    conocidos = set(vendedores)
+    for item in numeros:
+        nombre = item.get("vendedor")
+        if nombre and nombre not in conocidos:
+            vendedores.append(nombre)
+            conocidos.add(nombre)
+    grupos = {nombre: {"pagado": [], "reservado": []} for nombre in vendedores}
+    for item in numeros:
+        nombre, estado = item.get("vendedor"), item.get("estado")
+        if nombre in grupos and estado in ("pagado", "reservado"):
+            grupos[nombre][estado].append(item["numero"])
+
+    filas = []
+    for nombre in vendedores:
+        pagados = sorted(grupos[nombre]["pagado"])
+        reservados = sorted(grupos[nombre]["reservado"])
+        vendidos = len(pagados)
+        if vendidos >= 10:
+            avance = "✅ Meta cumplida"
+        elif vendidos >= 6:
+            avance = "🟡 Avance intermedio"
+        else:
+            avance = "🔴 Ventas pendientes"
+        filas.append({
+            "Estudiante": nombre,
+            "Vendidos (pagados)": vendidos,
+            "Reservados": len(reservados),
+            "Faltan para la meta": max(0, 10 - vendidos),
+            "Avance": avance,
+            "Números pagados": ", ".join(map(str, pagados)) or "—",
+            "Números reservados": ", ".join(map(str, reservados)) or "—",
+        })
+    return filas
+
+
 def render_dashboard_visual():
     st.divider()
 
     datos = db.dashboard_admin()
-    df = pd.DataFrame(datos["numeros"])
-
-    if df.empty:
-        st.info("No hay datos para mostrar.")
+    filas = resumen_por_estudiante(db.listar_alumnos(), datos["numeros"])
+    st.markdown("### Ventas por estudiante")
+    st.caption(
+        "Meta: 10 números pagados por estudiante. "
+        "🔴 0–5 · 🟡 6–9 · ✅ 10 o más. Las reservas se muestran por separado."
+    )
+    if not filas:
+        st.info("No hay estudiantes cargados ni ventas registradas.")
         return
-
-    st.markdown("### Números asociados por vendedor")
-
-    df_vendedor = df[df["vendedor"].notna()].copy()
-
-    if df_vendedor.empty:
-        st.info("Aún no hay números asociados a vendedores.")
-    else:
-        tabla_vendedor = (
-            df_vendedor
-            .groupby(["vendedor", "estado"])
-            .agg(
-                cantidad=("numero", "count"),
-                numeros=("numero", lambda x: ", ".join(
-                    str(n) for n in sorted(x)
-                ))
-            )
-            .reset_index()
-            .sort_values(["vendedor", "estado"])
-        )
-
-        tabla_vendedor = tabla_vendedor.rename(columns={
-            "vendedor": "Vendedor",
-            "estado": "Estado",
-            "cantidad": "Cantidad",
-            "numeros": "Números"
-        })
-
-        mostrar_tabla_estilizada(tabla_vendedor, height=250)
+    mostrar_tabla_estilizada(pd.DataFrame(filas), height=450)
 
 def render_resumen():
     st.subheader("Estado de números")
@@ -386,6 +409,12 @@ def render_administracion():
     )
 
     with st.form("form_configuracion"):
+        transferencias_habilitadas = st.toggle(
+            "Permitir pago por transferencia",
+            value=bool(config.get("transferencias_habilitadas", True)),
+            help="Al desactivarlo, las nuevas compras solo permiten pago directo al alumno. Las reservas anteriores mantienen su plazo y pueden confirmarse.",
+        )
+        st.caption("El cambio se aplica al presionar Guardar configuración.")
         n = st.number_input("Cantidad total de números (n)", min_value=1, step=1, value=int(config["n"]))
         p = st.number_input("Precio por número (p)", min_value=0, step=100, value=int(config["p"]))
         t_horas = st.number_input(
@@ -435,7 +464,8 @@ def render_administracion():
             "clave_admin": clave_admin,
             "premios": premios,
             "fecha_rifa": str(fecha_rifa) if fecha_rifa else None,
-            "bienvenida": bienvenida
+            "bienvenida": bienvenida,
+            "transferencias_habilitadas": transferencias_habilitadas
         }
 
         if n_final < n_actual:
