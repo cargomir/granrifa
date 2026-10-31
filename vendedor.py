@@ -11,11 +11,11 @@ def _limpiar_formulario_numero():
         "telefono_numero_input",
         "correo_input",
         "comprador_buscado",
-        "pagado_alumno"
+        "pagado_alumno",
+        "forma_pago_seleccionada"
     ]:
         st.session_state.pop(k, None)
 
-    st.session_state["pagado_alumno"] = True
 
 def render_vendedor():
     if "advertencia_pago" in st.session_state:
@@ -159,17 +159,17 @@ def render_vendedor():
         placeholder="Ej: pato_achurra@mail.com"
     )
 
+    opciones_pago = ["Pago en efectivo al alumno"]
     if config.get("transferencias_habilitadas", True):
-        pagado_alumno = st.checkbox(
-            f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**",
-            value=True,
-            key="pagado_alumno"
-        )
-    else:
-        # Descartar una elección de transferencia anterior en esta sesión.
-        st.session_state["pagado_alumno"] = True
-        pagado_alumno = True
-        st.info(f"Los números serán pagados directamente a **{st.session_state.nombre_vendedor_activo}**.")
+        opciones_pago.append("Pago por transferencia a la cuenta del curso")
+    if st.session_state.get("forma_pago_seleccionada") not in opciones_pago:
+        st.session_state["forma_pago_seleccionada"] = opciones_pago[0]
+    forma_pago = st.radio(
+        "Forma de pago",
+        opciones_pago,
+        key="forma_pago_seleccionada"
+    )
+    pagado_alumno = forma_pago == "Pago en efectivo al alumno"
 
 
     if not pagado_alumno:
@@ -184,7 +184,7 @@ def render_vendedor():
 
         st.warning(
             f"""
-    ⚠️ Solo desmarca esta opción si deseas pagar mediante transferencia a la cuenta del curso.
+    ⚠️ Seleccionaste el pago por transferencia a la cuenta del curso.
 
     En ese caso, deberás enviar el comprobante de pago a la directiva de los apoderados del curso dentro de un plazo máximo de **{tiempo_texto}**.
     Después de ese tiempo, si el pago aún no ha sido confirmado dentro de la aplicación por la directiva, los números seleccionados volverán a estar disponibles automáticamente.

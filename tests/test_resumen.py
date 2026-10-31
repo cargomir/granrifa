@@ -32,7 +32,7 @@ class ResumenTests(unittest.TestCase):
                 numeros = [{"vendedor": "Ana", "estado": "pagado", "numero": i}
                            for i in range(1, cantidad + 1)]
                 fila = resumen(["Ana"], numeros)[0]
-                self.assertTrue(fila["Avance"].startswith(simbolo))
+                self.assertEqual(fila["Avance"], simbolo)
                 self.assertEqual(fila["Faltan para la meta"], max(0, 10 - cantidad))
 
     def test_reservas_no_cuentan_como_ventas_y_se_conserva_el_padron(self):

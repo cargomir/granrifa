@@ -343,11 +343,11 @@ def resumen_por_estudiante(alumnos, numeros):
         reservados = sorted(grupos[nombre]["reservado"])
         vendidos = len(pagados)
         if vendidos >= 10:
-            avance = "✅ Meta cumplida"
+            avance = "✅"
         elif vendidos >= 6:
-            avance = "🟡 Avance intermedio"
+            avance = "🟡"
         else:
-            avance = "🔴 Ventas pendientes"
+            avance = "🔴"
         filas.append({
             "Estudiante": nombre,
             "Vendidos (pagados)": vendidos,
