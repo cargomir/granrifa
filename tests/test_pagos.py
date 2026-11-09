@@ -14,6 +14,7 @@ class Query:
 
     def __getattr__(self, name):
         def chain(*args, **kwargs):
+            self.client.calls.append((self.table, name, args))
             if name in ("insert", "update"):
                 self.operation = name
                 self.client.payloads.append((self.table, name, args[0]))
@@ -31,6 +32,7 @@ class Client:
     def __init__(self, *responses):
         self.responses = list(responses)
         self.payloads = []
+        self.calls = []
 
     def table(self, name):
         return Query(self, name)
@@ -38,7 +40,7 @@ class Client:
 
 def load_functions(client):
     source = Path(__file__).resolve().parents[1] / "db.py"
-    names = {"_data", "crear_compra", "compras_pendientes", "confirmar_pago_compra"}
+    names = {"_data", "crear_compra", "compras_pendientes", "confirmar_pago_compra", "rechazar_reserva"}
     tree = ast.parse(source.read_text(encoding="utf-8"))
     tree.body = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in names]
     namespace = dict(Any=Any, Dict=Dict, List=List, datetime=datetime,
@@ -63,6 +65,7 @@ class PagosTests(unittest.TestCase):
         client = Client([numero(pagado="Sí")], [])
         compras = load_functions(client)["compras_pendientes"]()
         self.assertEqual(compras[0]["numeros"], "1")
+        self.assertFalse(compras[0]["puede_rechazar"])
 
     def test_pago_de_numeros_con_compra_pendiente_es_recuperable(self):
         client = Client([numero(estado="pagado")], [])
@@ -125,6 +128,27 @@ class PagosTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "expirado"):
             load_functions(client)["confirmar_pago_compra"]("compra-1", "Transferencia")
         self.assertFalse(any(table == "compras" for table, _, _ in client.payloads))
+
+    def test_rechazo_libera_solo_numeros_reservados_de_la_compra_elegida(self):
+        client = Client([{"id_compra": "compra-1"}], [numero(), numero(numero=2)])
+        rechazar = load_functions(client)["rechazar_reserva"]
+        self.assertEqual(rechazar("compra-1"), 2)
+        self.assertIn(("compras", "eq", ("pagado", "No")), client.calls)
+        self.assertIn(("numeros", "eq", ("id_compra", "compra-1")), client.calls)
+        self.assertIn(("numeros", "eq", ("estado", "reservado")), client.calls)
+        self.assertEqual(client.payloads, [("numeros", "update", {
+            "estado": "disponible", "id_compra": None, "id_comprador": None,
+            "fecha_hora_reserva": None, "precio_unitario": None,
+        })])
+
+    def test_rechazo_no_actualiza_una_compra_ya_pagada(self):
+        client = Client([])
+        self.assertEqual(load_functions(client)["rechazar_reserva"]("compra-1"), 0)
+        self.assertEqual(client.payloads, [])
+
+    def test_rechazo_repetido_no_libera_numeros_nuevamente(self):
+        client = Client([{"id_compra": "compra-1"}], [])
+        self.assertEqual(load_functions(client)["rechazar_reserva"]("compra-1"), 0)
 
 
 if __name__ == "__main__":

@@ -375,15 +375,17 @@ def liberar_reservas_expiradas() -> int:
     if not ids_liberar:
         return 0
 
-    supabase.table("numeros").update({
+    respuesta = supabase.table("numeros").update({
         "estado": "disponible",
         "id_compra": None,
         "id_comprador": None,
         "fecha_hora_reserva": None,
         "precio_unitario": None
-    }).in_("id_numero", ids_liberar).execute()
+    }).in_("id_numero", ids_liberar).eq("estado", "reservado").lt(
+        "fecha_hora_reserva", umbral.isoformat()
+    ).execute()
 
-    return len(ids_liberar)
+    return len(_data(respuesta))
 
 
 def listar_numeros_disponibles() -> List[int]:
@@ -667,6 +669,7 @@ def compras_pendientes() -> List[Dict[str, Any]]:
                     else ""
                 ),
                 "nombre_alumno_vendedor": compra.get("nombre_alumno_vendedor"),
+                "puede_rechazar": compra.get("pagado") == "No",
                 "cantidad": 0,
                 "total": 0,
                 "fechas_reserva": [],
@@ -674,6 +677,8 @@ def compras_pendientes() -> List[Dict[str, Any]]:
                 "compradores": set()
             }
 
+        if r.get("estado") != "reservado":
+            grupos[idc]["puede_rechazar"] = False
         grupos[idc]["cantidad"] += 1
         grupos[idc]["numeros"].append(r.get("numero"))
         comprador = r.get("compradores") or {}
@@ -718,6 +723,27 @@ def compras_pendientes() -> List[Dict[str, Any]]:
         resultado.append(g)
 
     return sorted(resultado, key=lambda x: x["fecha_hora_compra"] or "", reverse=True)
+
+
+def rechazar_reserva(id_compra: str) -> int:
+    compra = (
+        supabase.table("compras").select("id_compra")
+        .eq("id_compra", id_compra).eq("pagado", "No").execute()
+    )
+    if not _data(compra):
+        return 0
+
+    respuesta = (
+        supabase.table("numeros").update({
+            "estado": "disponible",
+            "id_compra": None,
+            "id_comprador": None,
+            "fecha_hora_reserva": None,
+            "precio_unitario": None,
+        })
+        .eq("id_compra", id_compra).eq("estado", "reservado").execute()
+    )
+    return len(_data(respuesta))
 
 
 def confirmar_pago_compra(id_compra: str, forma_pago: str) -> None:

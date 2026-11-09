@@ -221,6 +221,10 @@ def render_administrador():
 def render_gestion_compras():
     st.subheader("Compras pendientes de pago")
 
+    numeros_liberados = st.session_state.pop("numeros_liberados_por_rechazo", 0)
+    if numeros_liberados:
+        st.success(f"Reserva rechazada. Números liberados: {numeros_liberados}.")
+
     try:
         pendientes = db.compras_pendientes()
     except Exception as error:
@@ -275,6 +279,27 @@ def render_gestion_compras():
                             st.error(f"No se pudo completar la confirmación: {error}. Puedes reintentar.")
                         else:
                             st.rerun()
+
+                    if compra["puede_rechazar"]:
+                        st.divider()
+                        acepta_rechazo = st.checkbox(
+                            f"Confirmo que quiero liberar los números {compra['numeros']}.",
+                            key=f"aceptar_rechazo_{compra['id_compra']}",
+                        )
+                        if st.button(
+                            "Rechazar reserva",
+                            key=f"rechazar_{compra['id_compra']}",
+                            disabled=not acepta_rechazo,
+                        ):
+                            try:
+                                liberados = db.rechazar_reserva(compra["id_compra"])
+                            except Exception as error:
+                                st.error(f"No se pudo rechazar la reserva: {error}")
+                            else:
+                                if liberados:
+                                    st.session_state["numeros_liberados_por_rechazo"] = liberados
+                                    st.rerun()
+                                st.warning("La compra ya no tiene números pendientes que se puedan liberar.")
 
                     st.markdown(
                         "<div style='height:30px'></div>",
